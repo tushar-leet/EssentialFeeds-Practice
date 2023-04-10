@@ -71,11 +71,45 @@ class RemoteFeedLoaderTest:XCTestCase{
         }
     }
     
+    func test_load_deliversItemsn200HttpResponseWithJSONList(){
+        let (sut,client) = makeSut()
+        
+        let item1 = FeedItems(id: UUID(),
+                              description: nil,
+                              location: nil,
+                              imageURL: URL(string: "http://a-url.com")!)
+        
+        let item1JSON = [
+            "id":item1.id.uuidString,
+            "description":nil,
+            "location":nil,
+            "image":item1.imageURL.absoluteString
+        ]
+        
+        let item2 = FeedItems(id: UUID(),
+                              description: "a description",
+                              location: "a location",
+                              imageURL: URL(string: "http://a-url.com")!)
+        
+        let item2JSON = [
+            "id":item2.id.uuidString,
+            "description":item2.description,
+            "location":item2.location,
+            "image":item2.imageURL.absoluteString
+        ]
+        
+        let itemsJSON = ["items":[item1JSON,item2JSON]]
+        expect(sut, toCompleteWith: .success([item1,item2])) {
+            let json = try! JSONSerialization.data(withJSONObject:itemsJSON)
+            client.complete(withStatusCode: 200,data:json)
+        }
+    }
+    
     private func expect(_ sut:RemoteFeedLoader,toCompleteWith result:RemoteFeedLoader.Result,when action:() -> Void,file:StaticString = #filePath, line:UInt = #line){
-        var capturedError = [RemoteFeedLoader.Result]()
-        sut.load{capturedError.append($0)}
+        var capturedResults = [RemoteFeedLoader.Result]()
+        sut.load{capturedResults.append($0)}
         action()
-        XCTAssertEqual(capturedError, [result],file:file,line: line)
+        XCTAssertEqual(capturedResults, [result],file:file,line: line)
     }
 
     // MARK: Helpers

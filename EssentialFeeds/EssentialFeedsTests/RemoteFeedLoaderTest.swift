@@ -36,37 +36,39 @@ class RemoteFeedLoaderTest:XCTestCase{
 
     func test_load_deliversErrorOnClientError(){
         let (sut,client) = makeSut()
-        var capturedError = [RemoteFeedLoader.Error]()
-        let clientError = NSError(domain: "Test", code: 0, userInfo: [:])
 
-        sut.load{capturedError.append($0)}
-        client.complete(with: clientError)
-        
-        XCTAssertEqual(capturedError, [.connectivity])
+        expect(sut, toCompleteWithError: .connectivity) {
+            let clientError = NSError(domain: "Test", code: 0, userInfo: [:])
+            client.complete(with: clientError)
+        }
     }
 
     func test_load_deliversErrorOnNon200HttpResponse(){
         let (sut,client) = makeSut()
-        
+
         let samples = [199,201,300,400,500]
-        
         samples.enumerated().forEach { (index,errorCode) in
-            var capturedError = [RemoteFeedLoader.Error]()
-            sut.load{capturedError.append($0)}
-            client.complete(withStatusCode: errorCode,at: index)
-            XCTAssertEqual(capturedError, [.invalidData])
+            expect(sut, toCompleteWithError: .invalidData) {
+                client.complete(withStatusCode: errorCode,at: index)
+            }
         }
     }
     
     func test_load_deliversErrorOn200HttpResponseWithInvalidJson(){
         let (sut,client) = makeSut()
+
+        expect(sut, toCompleteWithError: .invalidData) {
+            let invalidJson = Data("Invalid json".utf8)
+            client.complete(withStatusCode: 200,data:invalidJson)
+        }
+    }
+    
+    private func expect(_ sut:RemoteFeedLoader,toCompleteWithError error:RemoteFeedLoader.Error,when action:() -> Void,file:StaticString = #filePath, line:UInt = #line){
         var capturedError = [RemoteFeedLoader.Error]()
-       
         sut.load{capturedError.append($0)}
-        let invalidJson = Data("Invalid json".utf8)
-        client.complete(withStatusCode: 200,data:invalidJson)
-        
-        XCTAssertEqual(capturedError, [.invalidData])
+        action()
+        XCTAssertEqual(capturedError, [error])
+
     }
 
     // MARK: Helpers

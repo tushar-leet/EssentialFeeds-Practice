@@ -15,6 +15,7 @@
 		787D83D629DE8E43002C6B90 /* RemoteFeedLoaderTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787D83D529DE8E43002C6B90 /* RemoteFeedLoaderTest.swift */; };
 		787D83D929E00531002C6B90 /* RemoteFeedLoaderApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787D83D829E00531002C6B90 /* RemoteFeedLoaderApi.swift */; };
 		787D83DB29E5218A002C6B90 /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787D83DA29E5218A002C6B90 /* HTTPClient.swift */; };
+		787D83DD29E5239D002C6B90 /* FeedItemsMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787D83DC29E5239D002C6B90 /* FeedItemsMapper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,6 +38,7 @@
 		787D83D529DE8E43002C6B90 /* RemoteFeedLoaderTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteFeedLoaderTest.swift; sourceTree = "<group>"; };
 		787D83D829E00531002C6B90 /* RemoteFeedLoaderApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteFeedLoaderApi.swift; sourceTree = "<group>"; };
 		787D83DA29E5218A002C6B90 /* HTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClient.swift; sourceTree = "<group>"; };
+		787D83DC29E5239D002C6B90 /* FeedItemsMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedItemsMapper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +111,7 @@
 			children = (
 				787D83D829E00531002C6B90 /* RemoteFeedLoaderApi.swift */,
 				787D83DA29E5218A002C6B90 /* HTTPClient.swift */,
+				787D83DC29E5239D002C6B90 /* FeedItemsMapper.swift */,
 			);
 			path = FeedAPI;
 			sourceTree = "<group>";
@@ -224,6 +227,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				787D83D929E00531002C6B90 /* RemoteFeedLoaderApi.swift in Sources */,
+				787D83DD29E5239D002C6B90 /* FeedItemsMapper.swift in Sources */,
 				787D83D329DE879A002C6B90 /* FeedLoader.swift in Sources */,
 				787D83DB29E5218A002C6B90 /* HTTPClient.swift in Sources */,
 				787D83D129DE877E002C6B90 /* FeedItems.swift in Sources */,

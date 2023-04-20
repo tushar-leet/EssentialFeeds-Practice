@@ -61,8 +61,19 @@ class URLSessionHTTPClientTest: XCTestCase {
         XCTAssertEqual((receivedError! as NSError).domain, requestError.domain)
     }
     
-    func test_getFromUrl_failsOnAllNil(){
+    func test_getFromUrl_failsOnAllInvalidRepresentationCases(){
+        let nonHTTPURLResponse = URLResponse(url: anyURL(), mimeType: nil, expectedContentLength: 0, textEncodingName: nil)
+        let anyHTTPURLResponse = HTTPURLResponse(url: anyURL(), statusCode: 200, httpVersion: nil, headerFields: nil)
+        let anyData = Data("Any data".utf8)
+        let anyError = NSError(domain: "Any error", code: 0)
        XCTAssertNotNil(resultErrorFor(data:nil,response:nil,error:nil))
+       XCTAssertNotNil(resultErrorFor(data:nil,response:nonHTTPURLResponse,error:nil))
+       XCTAssertNotNil(resultErrorFor(data:nil,response:anyHTTPURLResponse,error:nil))
+       XCTAssertNotNil(resultErrorFor(data:anyData,response:nil,error:nil))
+       XCTAssertNotNil(resultErrorFor(data:anyData,response:nil,error:anyError))
+       XCTAssertNotNil(resultErrorFor(data:nil,response:anyHTTPURLResponse,error:anyError))
+       XCTAssertNotNil(resultErrorFor(data:anyData,response:nonHTTPURLResponse,error:anyError))
+       XCTAssertNotNil(resultErrorFor(data:anyData,response:anyHTTPURLResponse,error:anyError))
     }
     
     private func makeSut(file:StaticString = #filePath, line:UInt = #line) -> URLSessionHTTPClient{

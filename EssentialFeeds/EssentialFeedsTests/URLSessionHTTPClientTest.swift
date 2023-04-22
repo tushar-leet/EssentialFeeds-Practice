@@ -17,10 +17,13 @@ class URLSessionHTTPClient{
     
     struct UnexpectedValueRepresentation:Error{}
     func get(from url:URL,completion: @escaping ((HTTPClientResult) -> Void)){
-        session.dataTask(with: url) { _, _, error in
+        session.dataTask(with: url) { data, response, error in
             if let error = error {
                 completion(.failure(error))
-            }else{
+            }else if let data = data, data.count > 0, let response = response as? HTTPURLResponse{
+                completion(.success(data, response))
+            }
+            else{
                 completion(.failure(UnexpectedValueRepresentation()))
             }
         }.resume()
@@ -59,6 +62,25 @@ class URLSessionHTTPClientTest: XCTestCase {
         let receivedError = resultErrorFor(data: nil, response: nil, error: requestError)
     
         XCTAssertEqual((receivedError! as NSError).domain, requestError.domain)
+    }
+    
+    func test_getFromUrl_suceedsOnHTTPUrlResponseWithData(){
+        let data = anyData()
+        let response = anyHttpUrlResponse()
+        URLProtocolStub.stub(data: data, response: response, error: nil)
+        let expectation = expectation(description: "wait for response and data")
+        makeSut().get(from: anyURL()) { result in
+            switch result{
+            case let .success(receivedData, receivedResponse):
+                XCTAssertEqual(receivedResponse.url , response.url)
+            default:
+                XCTFail("expected success, received \(result)")
+            
+            }
+            expectation.fulfill()
+        }
+        
+        wait(for: [expectation], timeout: 1.0)
     }
     
     func test_getFromUrl_failsOnAllInvalidRepresentationCases(){
@@ -143,6 +165,7 @@ class URLSessionHTTPClientTest: XCTestCase {
         static func stopInterceptingRequest(){
             URLProtocol.unregisterClass(URLProtocolStub.self)
             stubs = nil
+            observerRequest = nil
         }
         
         static func observerRequest(observer: @escaping (URLRequest) -> Void){

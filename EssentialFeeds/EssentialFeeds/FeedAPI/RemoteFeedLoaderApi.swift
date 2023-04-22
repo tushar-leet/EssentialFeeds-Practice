@@ -26,7 +26,7 @@ public class RemoteFeedLoader:FeedLoader{
     }
     
     public func load(completion:@escaping (Result) -> Void = {_ in}){
-        client.get(url: url, completion: { [weak self] result in
+        client.get(from: url, completion: { [weak self] result in
             guard  self != nil else{
                 return
             }

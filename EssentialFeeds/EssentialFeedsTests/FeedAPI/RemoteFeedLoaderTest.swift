@@ -163,7 +163,7 @@ class RemoteFeedLoaderTest:XCTestCase{
 
         var messages = [(url:URL,completion: (HTTPClientResult) -> Void)]()
 
-        func get(url: URL, completion: @escaping (HTTPClientResult) -> Void) {
+        func get(from url: URL, completion: @escaping (HTTPClientResult) -> Void) {
             messages.append((url,completion))
         }
 

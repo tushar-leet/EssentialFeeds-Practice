@@ -144,7 +144,7 @@ class URLSessionHTTPClientTest: XCTestCase {
     // MARK: Helpers
     private class URLProtocolStub:URLProtocol{
         private static var stubs:Stub?
-        private static var observerRequest:((URLRequest) -> Void)?
+        private static var requestObserver:((URLRequest) -> Void)?
         
         static func stub(data:Data?,response:URLResponse?, error:Error?){
             stubs = Stub(data:data,response: response,error: error)
@@ -163,11 +163,11 @@ class URLSessionHTTPClientTest: XCTestCase {
         static func stopInterceptingRequest(){
             URLProtocol.unregisterClass(URLProtocolStub.self)
             stubs = nil
-            observerRequest = nil
+            requestObserver = nil
         }
         
         static func observerRequest(observer: @escaping (URLRequest) -> Void){
-            observerRequest = observer
+            requestObserver = observer
         }
         
         override class func canInit(with request: URLRequest) -> Bool {
@@ -180,9 +180,10 @@ class URLSessionHTTPClientTest: XCTestCase {
         
         override func startLoading() {
            
-            if let requestBlock = URLProtocolStub.observerRequest {
+            if let requestObserver = URLProtocolStub.requestObserver {
                 client?.urlProtocolDidFinishLoading(self)
-                requestBlock(request)
+                requestObserver(request)
+                return
             }
             if let data = URLProtocolStub.stubs?.data{
                 client?.urlProtocol(self, didLoad: data)

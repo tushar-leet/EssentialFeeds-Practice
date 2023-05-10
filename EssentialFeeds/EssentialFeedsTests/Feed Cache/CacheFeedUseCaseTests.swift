@@ -46,8 +46,9 @@ class LocalFeedLoader{
         self.currentDate = currentDate
     }
 
-    func save(_ items:[FeedItems]){
+    func save(_ items:[FeedItems],completion:@escaping (Error?) -> Void){
         store.deleteCachedFeed { [unowned self] error in
+            completion(error)
             if error == nil{
                 self.store.insert(items, timestamp: self.currentDate())
             }
@@ -65,14 +66,14 @@ final class CacheFeedUseCaseTests: XCTestCase {
     func test_save_requestCacheDeletion(){
         let (sut,store) = makeSut()
         let items = [uniqueItems(),uniqueItems()]
-        sut.save(items)
+        sut.save(items){ _ in}
         XCTAssertEqual(store.receivedMessages, [.deleteCachedFeed])
     }
 
     func test_save_doesNotRequestCacheInsertionOnDeletionError(){
         let (sut,store) = makeSut()
         let items = [uniqueItems(),uniqueItems()]
-        sut.save(items)
+        sut.save(items) { _ in}
         let deletionError =  anyNSError()
         store.completeDeletion(with:deletionError)
         XCTAssertEqual(store.receivedMessages, [.deleteCachedFeed])
@@ -82,10 +83,26 @@ final class CacheFeedUseCaseTests: XCTestCase {
         let timestamp = Date()
         let (sut,store) = makeSut(currentDate: {timestamp})
         let items = [uniqueItems(),uniqueItems()]
-        sut.save(items)
+        sut.save(items){ _ in}
         store.completeDeletionSuccessfully()
         XCTAssertEqual(store.receivedMessages, [.deleteCachedFeed,.insert(items, timestamp)])
     }
+    
+    func test_save_failsOnDeletionError(){
+        let (sut,store) = makeSut()
+        let items = [uniqueItems(),uniqueItems()]
+        var receivedError:Error?
+        let expectation = expectation(description: "fails on save")
+        sut.save(items){ error in
+            receivedError = error
+            expectation.fulfill()
+        }
+        let deletionError =  anyNSError()
+        store.completeDeletion(with:deletionError)
+        wait(for: [expectation], timeout: 1.0)
+        XCTAssertEqual(receivedError as NSError?, deletionError)
+    }
+    
     // MARK: - Helpers
 
     private func makeSut(currentDate:@escaping ()->Date = Date.init,file:StaticString = #filePath, line:UInt = #line) -> (LocalFeedLoader,FeedStore){

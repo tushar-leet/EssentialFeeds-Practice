@@ -7,12 +7,6 @@
 
 import Foundation
 
-public protocol FeedStore{
-    typealias DeletionCompletion = (Error?) -> ()
-    typealias InsertCompletion = (Error?) -> ()
-    func deleteCachedFeed(completion:@escaping DeletionCompletion)
-    func insert(_ items:[FeedItems],timestamp:Date,completion:@escaping InsertCompletion)
-}
 
 public final class LocalFeedLoader{
     var store:FeedStore

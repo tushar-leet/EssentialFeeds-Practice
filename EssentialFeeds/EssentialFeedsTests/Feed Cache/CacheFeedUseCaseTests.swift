@@ -8,12 +8,6 @@
 import XCTest
 import EssentialFeeds
 
-protocol FeedStore{
-    typealias DeletionCompletion = (Error?) -> ()
-    typealias InsertCompletion = (Error?) -> ()
-    func deleteCachedFeed(completion:@escaping DeletionCompletion)
-    func insert(_ items:[FeedItems],timestamp:Date,completion:@escaping InsertCompletion)
-}
 
 class FeedStoreSpy:FeedStore{
     typealias DeletionCompletion = (Error?) -> ()
@@ -55,33 +49,6 @@ class FeedStoreSpy:FeedStore{
     }
 }
 
-class LocalFeedLoader{
-    var store:FeedStore
-    let currentDate:() -> Date
-
-    init(store:FeedStore,currentDate:@escaping () -> Date){
-        self.store = store
-        self.currentDate = currentDate
-    }
-
-    func save(_ items:[FeedItems],completion:@escaping (Error?) -> Void){
-        store.deleteCachedFeed { [weak self] error in
-            guard let self = self else{return}
-            if let cacheDeletionError = error{
-                completion(cacheDeletionError)
-            }else{
-                self.insert(items: items, with: completion)
-            }
-        }
-    }
-    
-    private func insert(items:[FeedItems], with completion:@escaping (Error?) -> Void){
-        store.insert(items, timestamp: currentDate()) { [weak self] error in
-            guard  self != nil else{return}
-                completion(error)
-        }
-    }
-}
 
 final class CacheFeedUseCaseTests: XCTestCase {
 

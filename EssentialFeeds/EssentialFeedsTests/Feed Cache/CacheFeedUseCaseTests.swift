@@ -15,7 +15,7 @@ class FeedStoreSpy:FeedStore{
    
     enum ReceivedMessages:Equatable{
         case deleteCachedFeed
-        case insert([FeedItems],Date)
+        case insert([LocalFeedItems],Date)
     }
     
     private var deletionCompletion = [DeletionCompletion]()
@@ -35,7 +35,7 @@ class FeedStoreSpy:FeedStore{
         deletionCompletion[index](nil)
     }
 
-    func insert(_ items:[FeedItems],timestamp:Date,completion:@escaping InsertCompletion){
+    func insert(_ items:[LocalFeedItems],timestamp:Date,completion:@escaping InsertCompletion){
         receivedMessages.append(.insert(items, timestamp))
         insertCompletion.append(completion)
     }
@@ -77,9 +77,10 @@ final class CacheFeedUseCaseTests: XCTestCase {
         let timestamp = Date()
         let (sut,store) = makeSut(currentDate: {timestamp})
         let items = [uniqueItems(),uniqueItems()]
+        let localFeedItems = items.map{LocalFeedItems(id: $0.id, description: $0.description, location: $0.location, imageURL: $0.imageURL)}
         sut.save(items){ _ in}
         store.completeDeletionSuccessfully()
-        XCTAssertEqual(store.receivedMessages, [.deleteCachedFeed,.insert(items, timestamp)])
+        XCTAssertEqual(store.receivedMessages, [.deleteCachedFeed,.insert(localFeedItems, timestamp)])
     }
     
     func test_save_failsOnDeletionError(){

@@ -122,8 +122,8 @@ class LoadFeedFromRemoteFeedUseCaseTests:XCTestCase{
         wait(for: [exp], timeout: 1.0)
     }
     
-    private func makeItems(id:UUID,description:String? = nil,location:String? = nil,imageURL:URL) -> (model:FeedItems,json:[String:Any]){
-        let item = FeedItems(id: id, description: description, location: location, imageURL: imageURL)
+    private func makeItems(id:UUID,description:String? = nil,location:String? = nil,imageURL:URL) -> (model:FeedImage,json:[String:Any]){
+        let item = FeedImage(id: id, description: description, location: location, url: imageURL)
         let json = [
             "id":id.uuidString,
             "description":description,

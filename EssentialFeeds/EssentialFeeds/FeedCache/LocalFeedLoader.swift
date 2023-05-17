@@ -29,8 +29,8 @@ public final class LocalFeedLoader{
         }
     }
     
-    public func load(){
-        store.retrieve()
+    public func load(completion:@escaping (SaveResult) -> Void){
+        store.retrieve(completion: completion)
     }
     
     private func insert(feeds:[FeedImage], with completion:@escaping (SaveResult) -> Void){

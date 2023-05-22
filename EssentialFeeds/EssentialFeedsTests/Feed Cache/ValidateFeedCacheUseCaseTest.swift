@@ -23,7 +23,7 @@ final class ValidateFeedCacheUseCaseTest: XCTestCase {
         XCTAssertEqual(store.receivedMessages, [.retrieve,.deleteCachedFeed])
     }
     
-    func test_load_doesNotDeleteCacheOnEmptyCache(){
+    func test_validateCache_doesNotDeleteCacheOnEmptyCache(){
         let (sut,store) = makeSut()
         
         sut.validateCache()
@@ -31,7 +31,7 @@ final class ValidateFeedCacheUseCaseTest: XCTestCase {
         XCTAssertEqual(store.receivedMessages, [.retrieve])
     }
     
-    func test_load_doesNotdeletesCacheOnLessThanSevenDaysOldCache(){
+    func test_validateCache_doesNotdeletesCacheOnLessThanSevenDaysOldCache(){
         let uniqueFeed = uniqueImageFeed()
         let fixedCurrentDate = Date()
         let lessThanSevenDaysOldTimestamp = fixedCurrentDate.addind(days: -7).adding(seconds: 1)
@@ -41,7 +41,7 @@ final class ValidateFeedCacheUseCaseTest: XCTestCase {
         XCTAssertEqual(store.receivedMessages, [.retrieve])
     }
     
-    func test_load_deleteCacheOnSevenDaysOldCache(){
+    func test_validateCache_deleteCacheOnSevenDaysOldCache(){
         let uniqueFeed = uniqueImageFeed()
         let fixedCurrentDate = Date()
         let lessThanSevenDaysOldTimestamp = fixedCurrentDate.addind(days: -7)
@@ -51,7 +51,7 @@ final class ValidateFeedCacheUseCaseTest: XCTestCase {
         XCTAssertEqual(store.receivedMessages, [.retrieve,.deleteCachedFeed])
     }
     
-    func test_load_deletesCacheOnMoreThanSevenDaysOldCache(){
+    func test_validateCache_deletesCacheOnMoreThanSevenDaysOldCache(){
         let uniqueFeed = uniqueImageFeed()
         let fixedCurrentDate = Date()
         let lessThanSevenDaysOldTimestamp = fixedCurrentDate.addind(days: -7).adding(seconds: -1)
@@ -59,6 +59,18 @@ final class ValidateFeedCacheUseCaseTest: XCTestCase {
         sut.validateCache()
         store.completeRetrievel(with: uniqueFeed.localModel, timestamp: lessThanSevenDaysOldTimestamp)
         XCTAssertEqual(store.receivedMessages, [.retrieve,.deleteCachedFeed])
+    }
+    
+    func test_validateCache_doesNotDeleteCacheIfSUTHasBeenDeallocated(){
+        let feedStore = FeedStoreSpy()
+        var localFeedLoader:LocalFeedLoader? = LocalFeedLoader(store: feedStore, currentDate: Date.init)
+        
+        localFeedLoader?.validateCache()
+        localFeedLoader = nil
+        feedStore.completeRetrievel(with: anyNSError())
+        
+        XCTAssertEqual(feedStore.receivedMessages, [.retrieve])
+        
     }
     
     private func makeSut(currentDate:@escaping ()->Date = Date.init,file:StaticString = #filePath, line:UInt = #line) -> (LocalFeedLoader,FeedStoreSpy){

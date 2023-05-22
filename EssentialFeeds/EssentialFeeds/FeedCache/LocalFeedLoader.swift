@@ -18,7 +18,17 @@ public final class LocalFeedLoader{
         self.store = store
         self.currentDate = currentDate
     }
+    
+    private func validate(_ timestamp:Date) -> Bool{
+        guard let maxCacheAge = calendar.date(byAdding: .day, value:7, to: timestamp) else{
+            return false
+        }
+        return currentDate() < maxCacheAge
+    }
+}
 
+extension LocalFeedLoader{
+    
     public func save(_ items:[FeedImage],completion:@escaping (SaveResult) -> Void){
         store.deleteCachedFeed { [weak self] error in
             guard let self = self else{return}
@@ -30,6 +40,15 @@ public final class LocalFeedLoader{
         }
     }
     
+    private func insert(feeds:[FeedImage], with completion:@escaping (SaveResult) -> Void){
+        store.insert(feeds.toLocal(), timestamp: currentDate()) { [weak self] error in
+            guard  self != nil else{return}
+                completion(error)
+        }
+    }
+}
+    
+extension LocalFeedLoader{
     public func load(completion:@escaping (LoadResult) -> Void){
         store.retrieve{ [weak self] result in
             guard let self = self else {return}
@@ -43,7 +62,9 @@ public final class LocalFeedLoader{
             }
         }
     }
-    
+}
+
+extension LocalFeedLoader{
     public func validateCache(){
         store.retrieve{ [weak self] result in
             guard let self = self else{
@@ -58,22 +79,8 @@ public final class LocalFeedLoader{
             }
         }
     }
-    
-    private func validate(_ timestamp:Date) -> Bool{
-        guard let maxCacheAge = calendar.date(byAdding: .day, value:7, to: timestamp) else{
-            return false
-        }
-        
-        return currentDate() < maxCacheAge
-    }
-    
-    private func insert(feeds:[FeedImage], with completion:@escaping (SaveResult) -> Void){
-        store.insert(feeds.toLocal(), timestamp: currentDate()) { [weak self] error in
-            guard  self != nil else{return}
-                completion(error)
-        }
-    }
 }
+
 
 private extension Array where Element == FeedImage{
     func toLocal() -> [LocalFeedImage]{

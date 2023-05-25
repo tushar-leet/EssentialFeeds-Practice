@@ -192,13 +192,13 @@ final class CodableFeedStoreTest: XCTestCase {
     }
     
     // MARK: HELPERS
-    private func makeSUT(storeURL:URL? = nil, file:StaticString = #filePath, line:UInt = #line) -> CodableFeedStore{
+    private func makeSUT(storeURL:URL? = nil, file:StaticString = #filePath, line:UInt = #line) -> FeedStore{
         let sut = CodableFeedStore(storeURL: storeURL ?? testSpecificStoreURL())
         trackForMemoryLeaks(sut,file: file,line: line)
         return sut
     }
     
-    private func deleteCache(from sut:CodableFeedStore) -> Error?{
+    private func deleteCache(from sut:FeedStore) -> Error?{
         let exp = expectation(description: "wait for cache deletion")
         var deletionError:Error?
         sut.deleteCachedFeed { retrievedDeletionError in
@@ -214,7 +214,7 @@ final class CodableFeedStoreTest: XCTestCase {
     }
     
     @discardableResult
-    private func insert(_ cache:(feed:[LocalFeedImage],timestamp:Date), to sut:CodableFeedStore) -> Error?{
+    private func insert(_ cache:(feed:[LocalFeedImage],timestamp:Date), to sut:FeedStore) -> Error?{
         let exp = expectation(description: "wait for cache insertion")
         var insertionError:Error?
         sut.insert(cache.feed,timestamp: cache.timestamp) { retrieveInsertionError in
@@ -241,12 +241,12 @@ final class CodableFeedStoreTest: XCTestCase {
         cachesDirectory().appendingPathComponent("\(type(of: self)).store")
     }
     
-    private func expect(_ sut:CodableFeedStore,toRetrieveTwice expectedResult:RetrieveCachedFeedResult,file:StaticString = #filePath, line:UInt = #line){
+    private func expect(_ sut:FeedStore,toRetrieveTwice expectedResult:RetrieveCachedFeedResult,file:StaticString = #filePath, line:UInt = #line){
         expect(sut, toCompleteWith: expectedResult,file: file,line: line)
         expect(sut, toCompleteWith: expectedResult,file: file,line: line)
     }
     
-    private func expect(_ sut:CodableFeedStore,toCompleteWith expectedResult:RetrieveCachedFeedResult,file:StaticString = #filePath, line:UInt = #line){
+    private func expect(_ sut:FeedStore,toCompleteWith expectedResult:RetrieveCachedFeedResult,file:StaticString = #filePath, line:UInt = #line){
         let exp = expectation(description: "Wait for load completion")
 
         sut.retrieve { retriveResult in

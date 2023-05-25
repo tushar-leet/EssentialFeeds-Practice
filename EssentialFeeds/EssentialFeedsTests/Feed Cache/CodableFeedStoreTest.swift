@@ -134,6 +134,18 @@ final class CodableFeedStoreTest: XCTestCase {
         return sut
     }
     
+    private func setupEmptyStoreState(){
+        deleteStoreArtifacts()
+    }
+    
+    private func undoStoreSideEffects(){
+        deleteStoreArtifacts()
+    }
+    
+    private func deleteStoreArtifacts(){
+        try? FileManager.default.removeItem(at: testSpecificStoreURL())
+    }
+    
     private func testSpecificStoreURL() -> URL{
         FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("\(type(of: self)).store")
     }

@@ -139,7 +139,8 @@ final class CodableFeedStoreTest: XCTestCase {
             insertExpectationSecond.fulfill()
         }
         
-        XCTAssertEqual(completedExpectationsInOrder, [insertExpectation,deleteExpectation,insertExpectation])
+        wait(for: completedExpectationsInOrder, timeout: 5.0)
+        XCTAssertEqual(completedExpectationsInOrder, [insertExpectation,deleteExpectation,insertExpectationSecond])
     }
     
     // MARK: HELPERS

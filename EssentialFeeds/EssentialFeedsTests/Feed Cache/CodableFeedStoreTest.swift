@@ -9,80 +9,6 @@ import Foundation
 import XCTest
 import EssentialFeeds
 
-class CodableFeedStore:FeedStore{
-    
-    private struct Cache:Codable{
-        let feed:[CodableFeedImage]
-        let timeStamp:Date
-        
-        var localFeed:[LocalFeedImage]{
-            feed.map{$0.local}
-        }
-    }
-    
-    private struct CodableFeedImage:Codable{
-        private let id:UUID
-        private let description:String?
-        private let location:String?
-        private let url:URL
-        
-        init(_ image:LocalFeedImage)  {
-            id = image.id
-            description = image.description
-            location = image.description
-            url = image.url
-        }
-        
-        var local:LocalFeedImage{
-            LocalFeedImage(id: id, description: description, location: location, url: url)
-        }
-    }
-    
-    private let storeURL:URL
-    
-    init(storeURL:URL){
-        self.storeURL = storeURL
-    }
-    
-    func retrieve(completion:@escaping FeedStore.RetrieveCompletion){
-        guard let data = try? Data(contentsOf: storeURL) else{
-            completion(.empty)
-            return
-        }
-        do{
-            let decoder = JSONDecoder()
-            let cache = try decoder.decode(Cache.self, from: data)
-            completion(.found(feed: cache.localFeed, timestamp: cache.timeStamp))
-        }catch{
-            completion(.failure(error))
-        }
-    }
-    
-    func insert(_ feeds:[LocalFeedImage],timestamp:Date,completion:@escaping FeedStore.InsertCompletion){
-        do{
-            let encoder = JSONEncoder()
-            let encoded = try encoder.encode(Cache(feed: feeds.map(CodableFeedImage.init), timeStamp: timestamp))
-            try encoded.write(to: storeURL)
-            completion(nil)
-        }catch{
-            completion(error)
-        }
-    }
-    
-    func deleteCachedFeed(completion:@escaping FeedStore.DeletionCompletion){
-        guard FileManager.default.fileExists(atPath: storeURL.path) else{
-            return completion(nil)
-        }
-        
-        do{
-            try FileManager.default.removeItem(at: storeURL)
-            completion(nil)
-        } catch{
-            completion(error)
-        }
-    }
-}
-
 final class CodableFeedStoreTest: XCTestCase {
     
     override  func setUp() {
@@ -189,6 +115,31 @@ final class CodableFeedStoreTest: XCTestCase {
         XCTAssertNotNil(deletionError,"Expected empty cache deletion to nil")
         
         expect(sut, toCompleteWith: .empty)
+    }
+    
+    func test_storeSideeffects_runsSerially(){
+        let sut = makeSUT()
+        var completedExpectationsInOrder = [XCTestExpectation]()
+        
+        let insertExpectation = expectation(description: "perform insertion")
+        sut.insert(uniqueImageFeed().localModel, timestamp: Date()) { _ in
+            completedExpectationsInOrder.append(insertExpectation)
+            insertExpectation.fulfill()
+        }
+        
+        let deleteExpectation = expectation(description: "perform deletion")
+        sut.deleteCachedFeed { _ in
+            completedExpectationsInOrder.append(deleteExpectation)
+            deleteExpectation.fulfill()
+        }
+        
+        let insertExpectationSecond = expectation(description: "perform another insertion")
+        sut.insert(uniqueImageFeed().localModel, timestamp: Date()) { _ in
+            completedExpectationsInOrder.append(insertExpectationSecond)
+            insertExpectationSecond.fulfill()
+        }
+        
+        XCTAssertEqual(completedExpectationsInOrder, [insertExpectation,deleteExpectation,insertExpectation])
     }
     
     // MARK: HELPERS

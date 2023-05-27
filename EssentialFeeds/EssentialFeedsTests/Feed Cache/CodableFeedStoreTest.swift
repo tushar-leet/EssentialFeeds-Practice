@@ -194,42 +194,11 @@ final class CodableFeedStoreTest: XCTestCase,FailableFeedStore {
     }
     
     // MARK: HELPERS
+    
     private func makeSUT(storeURL:URL? = nil, file:StaticString = #filePath, line:UInt = #line) -> FeedStore{
         let sut = CodableFeedStore(storeURL: storeURL ?? testSpecificStoreURL())
         trackForMemoryLeaks(sut,file: file,line: line)
         return sut
-    }
-    
-    @discardableResult
-    private func deleteCache(from sut:FeedStore) -> Error?{
-        let exp = expectation(description: "wait for cache deletion")
-        var deletionError:Error?
-        sut.deleteCachedFeed { retrievedDeletionError in
-            deletionError = retrievedDeletionError
-            exp.fulfill()
-        }
-        wait(for: [exp], timeout: 1.0)
-        return deletionError
-    }
-    
-    private func cachesDirectory() -> URL{
-        FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
-    }
-    
-    private func testSpecificStoreURL() -> URL{
-        cachesDirectory().appendingPathComponent("\(type(of: self)).store")
-    }
-    
-    @discardableResult
-    private func insert(_ cache:(feed:[LocalFeedImage],timestamp:Date), to sut:FeedStore) -> Error?{
-        let exp = expectation(description: "wait for cache insertion")
-        var insertionError:Error?
-        sut.insert(cache.feed,timestamp: cache.timestamp) { retrieveInsertionError in
-            insertionError = retrieveInsertionError
-            exp.fulfill()
-        }
-        wait(for: [exp], timeout: 1.0)
-        return insertionError
     }
     
     private func setupEmptyStoreState(){
@@ -244,28 +213,12 @@ final class CodableFeedStoreTest: XCTestCase,FailableFeedStore {
         try? FileManager.default.removeItem(at: testSpecificStoreURL())
     }
     
-    private func expect(_ sut:FeedStore,toRetrieveTwice expectedResult:RetrieveCachedFeedResult,file:StaticString = #filePath, line:UInt = #line){
-        expect(sut, toCompleteWith: expectedResult,file: file,line: line)
-        expect(sut, toCompleteWith: expectedResult,file: file,line: line)
+    private func cachesDirectory() -> URL{
+        FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
     }
     
-    private func expect(_ sut:FeedStore,toCompleteWith expectedResult:RetrieveCachedFeedResult,file:StaticString = #filePath, line:UInt = #line){
-        let exp = expectation(description: "Wait for load completion")
-
-        sut.retrieve { retriveResult in
-            switch (retriveResult,expectedResult){
-            case  (.empty,.empty),
-                  (.failure,.failure):
-               break
-            case let (.found(expected),.found(retrieved)):
-                XCTAssertEqual(retrieved.feed, expected.feed)
-                XCTAssertEqual(retrieved.timestamp, expected.timestamp)
-            default:
-                XCTFail("Expected  to retrieve \(expectedResult) result,  but got \(retriveResult) instead")
-            }
-            exp.fulfill()
-        }
-
-        wait(for: [exp], timeout: 1.0)
+    private func testSpecificStoreURL() -> URL{
+        cachesDirectory().appendingPathComponent("\(type(of: self)).store")
     }
+    
 }

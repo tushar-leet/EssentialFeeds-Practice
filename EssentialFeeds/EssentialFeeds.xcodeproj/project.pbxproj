@@ -42,6 +42,7 @@
 		78C54DC52A21C21B00F2C37F /* FailableDeleteFeedStoreSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C54DC42A21C21B00F2C37F /* FailableDeleteFeedStoreSpec.swift */; };
 		78C54DC82A21F3F100F2C37F /* CoreDataFeedStoreSpecs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C54DC72A21F3F100F2C37F /* CoreDataFeedStoreSpecs.swift */; };
 		78C54DCB2A21FA8000F2C37F /* FeedStore.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 78C54DC92A21FA8000F2C37F /* FeedStore.xcdatamodeld */; };
+		78C54DCD2A21FFB100F2C37F /* CoreDataFeedStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C54DCC2A21FFB100F2C37F /* CoreDataFeedStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -97,6 +98,7 @@
 		78C54DC42A21C21B00F2C37F /* FailableDeleteFeedStoreSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailableDeleteFeedStoreSpec.swift; sourceTree = "<group>"; };
 		78C54DC72A21F3F100F2C37F /* CoreDataFeedStoreSpecs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataFeedStoreSpecs.swift; sourceTree = "<group>"; };
 		78C54DCA2A21FA8000F2C37F /* FeedStore.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = FeedStore.xcdatamodel; sourceTree = "<group>"; };
+		78C54DCC2A21FFB100F2C37F /* CoreDataFeedStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataFeedStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -238,6 +240,7 @@
 				78C54DA92A12590A00F2C37F /* LocalFeedImage.swift */,
 				78C54DB62A1BA60400F2C37F /* FeedCachePolicy.swift */,
 				78C54DBA2A1FA04C00F2C37F /* CodableFeedStore.swift */,
+				78C54DCC2A21FFB100F2C37F /* CoreDataFeedStore.swift */,
 			);
 			path = FeedCache;
 			sourceTree = "<group>";
@@ -414,6 +417,7 @@
 				787D83DB29E5218A002C6B90 /* HTTPClient.swift in Sources */,
 				787D83D129DE877E002C6B90 /* FeedItems.swift in Sources */,
 				787D83E529F3B775002C6B90 /* URLSessionHTTPClient.swift in Sources */,
+				78C54DCD2A21FFB100F2C37F /* CoreDataFeedStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

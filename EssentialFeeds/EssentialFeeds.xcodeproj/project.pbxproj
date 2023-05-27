@@ -40,6 +40,7 @@
 		78C54DC12A21C1B500F2C37F /* FailableRetrieveFeedStoreSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C54DC02A21C1B500F2C37F /* FailableRetrieveFeedStoreSpec.swift */; };
 		78C54DC32A21C1FB00F2C37F /* FailableInsertFeedStoreSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C54DC22A21C1FB00F2C37F /* FailableInsertFeedStoreSpec.swift */; };
 		78C54DC52A21C21B00F2C37F /* FailableDeleteFeedStoreSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C54DC42A21C21B00F2C37F /* FailableDeleteFeedStoreSpec.swift */; };
+		78C54DC82A21F3F100F2C37F /* CoreDataFeedStoreSpecs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C54DC72A21F3F100F2C37F /* CoreDataFeedStoreSpecs.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -93,6 +94,7 @@
 		78C54DC02A21C1B500F2C37F /* FailableRetrieveFeedStoreSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailableRetrieveFeedStoreSpec.swift; sourceTree = "<group>"; };
 		78C54DC22A21C1FB00F2C37F /* FailableInsertFeedStoreSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailableInsertFeedStoreSpec.swift; sourceTree = "<group>"; };
 		78C54DC42A21C21B00F2C37F /* FailableDeleteFeedStoreSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailableDeleteFeedStoreSpec.swift; sourceTree = "<group>"; };
+		78C54DC72A21F3F100F2C37F /* CoreDataFeedStoreSpecs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataFeedStoreSpecs.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -220,6 +222,7 @@
 				78C54DAB2A134E1A00F2C37F /* LoadFeedFromCacheUseCaseTest.swift */,
 				78C54DB02A1B38B700F2C37F /* ValidateFeedCacheUseCaseTest.swift */,
 				78C54DB82A1F0FC900F2C37F /* CodableFeedStoreTest.swift */,
+				78C54DC72A21F3F100F2C37F /* CoreDataFeedStoreSpecs.swift */,
 			);
 			path = "Feed Cache";
 			sourceTree = "<group>";
@@ -419,6 +422,7 @@
 				78C54DC52A21C21B00F2C37F /* FailableDeleteFeedStoreSpec.swift in Sources */,
 				78C54DC12A21C1B500F2C37F /* FailableRetrieveFeedStoreSpec.swift in Sources */,
 				78C54DBF2A21BC9300F2C37F /* XCTestCase+FeedStoreSpecs.swift in Sources */,
+				78C54DC82A21F3F100F2C37F /* CoreDataFeedStoreSpecs.swift in Sources */,
 				78C54DB12A1B38B700F2C37F /* ValidateFeedCacheUseCaseTest.swift in Sources */,
 				78C54DAC2A134E1A00F2C37F /* LoadFeedFromCacheUseCaseTest.swift in Sources */,
 				78C54DB52A1B6D9700F2C37F /* SharedTestHelpers.swift in Sources */,

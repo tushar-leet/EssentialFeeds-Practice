@@ -10,7 +10,7 @@ import XCTest
 import EssentialFeeds
 
 final class CodableFeedStoreTest: XCTestCase,FailableFeedStore {
-    
+   
     override  func setUp() {
         super.setUp()
         setupEmptyStoreState()
@@ -26,17 +26,17 @@ final class CodableFeedStoreTest: XCTestCase,FailableFeedStore {
         assertThatRetrieveDeliversEmptyOnEmptyCache(on: sut)
     }
     
-    func test_retrieve_hasNoSideEffectOnEmptyCache(){
+    func test_retrieve_hasNoSideEffectsOnEmptyCache(){
         let sut = makeSUT()
         assertThatRetrieveHasNoSideEffectsOnEmptyCache(on: sut)
     }
     
-    func test_retrieve_deliversFoundValueOnNonEmptyCache(){
+    func test_retrieve_deliversFoundValuesOnNonEmptyCache(){
         let sut = makeSUT()
         assertThatRetrieveDeliversFoundValuesOnNonEmptyCache(on: sut)
     }
     
-    func test_retrieve_hasNoSideEffectOnNonEmptyCache(){
+    func test_retrieve_hasNoSideEffectsOnNonEmptyCache(){
         let sut = makeSUT()
         assertThatRetrieveHasNoSideEffectsOnEmptyCache(on: sut)
     }
@@ -78,7 +78,7 @@ final class CodableFeedStoreTest: XCTestCase,FailableFeedStore {
         assertThatInsertDeliversNoErrorOnNonEmptyCache(on: sut)
     }
     
-    func test_insert_overridesPreviouslyInsertedCachedValues(){
+    func test_insert_overridesPreviouslyInsertedCacheValues(){
         let sut = makeSUT()
         assertThatInsertOverridesPreviouslyInsertedCacheValues(on: sut)
     }
@@ -115,7 +115,7 @@ final class CodableFeedStoreTest: XCTestCase,FailableFeedStore {
 //        assertThatDeleteHasNoSideEffectsOnDeletionError(on: sut)
     }
     
-    func test_storeSideeffects_runsSerially(){
+    func test_storeSideEffects_runSerially(){
         let sut = makeSUT()
         assertThatSideEffectsRunSerially(on: sut)
     }

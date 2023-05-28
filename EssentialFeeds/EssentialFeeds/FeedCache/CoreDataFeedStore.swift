@@ -8,6 +8,20 @@
 import Foundation
 import CoreData
 
+@objc(ManagedCache)
+private class ManagedCache: NSManagedObject {
+     @NSManaged var timestamp: Date
+     @NSManaged var feed: NSOrderedSet
+ }
+
+@objc(ManagedFeedImage)
+ private class ManagedFeedImage: NSManagedObject {
+     @NSManaged var id: UUID
+     @NSManaged var imageDescription: String?
+     @NSManaged var location: String?
+     @NSManaged var url: URL
+     @NSManaged var cache: ManagedCache
+ }
 
 public final class CoreDataFeedStore:FeedStore{
     
@@ -23,27 +37,52 @@ public final class CoreDataFeedStore:FeedStore{
         
     }
     
-    public func insert(_ feeds: [EssentialFeeds.LocalFeedImage], timestamp: Date, completion: @escaping InsertCompletion) {
-        
+    public func insert(_ feeds: [LocalFeedImage], timestamp: Date, completion: @escaping InsertCompletion) {
+        let context = self.context
+        context.perform {
+            do {
+                let managedCache = ManagedCache(context: context)
+                managedCache.timestamp = timestamp
+                managedCache.feed = NSOrderedSet(array: feeds.map { local in
+                    let managed = ManagedFeedImage(context: context)
+                    managed.id = local.id
+                    managed.imageDescription = local.description
+                    managed.location = local.location
+                    managed.url = local.url
+                    return managed
+                })
+                
+                try context.save()
+                completion(nil)
+            } catch {
+                completion(error)
+            }
+        }
     }
     
     public func retrieve(completion: @escaping RetrieveCompletion) {
-        completion(.empty)
+        let context = self.context
+        context.perform {
+            do {
+                let request = NSFetchRequest<ManagedCache>(entityName: ManagedCache.entity().name!)
+                request.returnsObjectsAsFaults = false
+                if let cache = try context.fetch(request).first {
+                    completion(.found(
+                        feed: cache.feed
+                            .compactMap { ($0 as? ManagedFeedImage) }
+                            .map {
+                                LocalFeedImage(id: $0.id, description: $0.imageDescription, location: $0.location, url: $0.url)
+                            },
+                        timestamp: cache.timestamp))
+                } else {
+                    completion(.empty)
+                }
+            } catch {
+                completion(.failure(error))
+            }
+        }
     }
 }
-
-private class ManagedCache: NSManagedObject {
-     @NSManaged var timestamp: Date
-     @NSManaged var feed: NSOrderedSet
- }
-
- private class ManagedFeedImage: NSManagedObject {
-     @NSManaged var id: UUID
-     @NSManaged var imageDescription: String?
-     @NSManaged var location: String?
-     @NSManaged var url: URL
-     @NSManaged var cache: ManagedCache
- }
 
 private extension NSPersistentContainer {
      enum LoadingError: Swift.Error {

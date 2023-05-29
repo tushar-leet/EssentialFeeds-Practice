@@ -12,6 +12,10 @@ import CoreData
 public class ManagedCache: NSManagedObject {
      @NSManaged var timestamp: Date
      @NSManaged var feed: NSSet
+     
+    var localFeed:[LocalFeedImage]{
+        feed.compactMap{($0 as? ManagedFeedImage)?.local}
+    }
  }
 
 @objc(ManagedFeedImage)
@@ -21,6 +25,21 @@ public class ManagedCache: NSManagedObject {
      @NSManaged var location: String?
      @NSManaged var url: URL
      @NSManaged var cache: ManagedCache
+     
+     static func images(from localFeed: [LocalFeedImage], in context: NSManagedObjectContext) -> NSSet {
+         return NSSet(array: localFeed.map { local in
+             let managed = ManagedFeedImage(context: context)
+             managed.id = local.id
+             managed.imageDescription = local.description
+             managed.location = local.location
+             managed.url = local.url
+             return managed
+         })
+     }
+     
+     var local:LocalFeedImage{
+         LocalFeedImage(id: id, description: imageDescription, location: location, url: url)
+     }
  }
 
 public final class CoreDataFeedStore:FeedStore{
@@ -43,15 +62,7 @@ public final class CoreDataFeedStore:FeedStore{
             do {
                 let managedCache = ManagedCache(context: context)
                 managedCache.timestamp = timestamp
-                managedCache.feed = NSSet(array: feeds.map { local in
-                    let managed = ManagedFeedImage(context: context)
-                    managed.id = local.id
-                    managed.imageDescription = local.description
-                    managed.location = local.location
-                    managed.url = local.url
-                    return managed
-                })
-                
+                managedCache.feed = ManagedFeedImage.images(from: feeds, in: context)
                 try context.save()
                 completion(nil)
             } catch {
@@ -68,11 +79,7 @@ public final class CoreDataFeedStore:FeedStore{
                 request.returnsObjectsAsFaults = false
                 if let cache = try context.fetch(request).first {
                     completion(.found(
-                        feed: cache.feed
-                            .compactMap { ($0 as? ManagedFeedImage) }
-                            .map {
-                                LocalFeedImage(id: $0.id, description: $0.imageDescription, location: $0.location, url: $0.url)
-                            },
+                        feed: cache.localFeed,
                         timestamp: cache.timestamp))
                 } else {
                     completion(.empty)

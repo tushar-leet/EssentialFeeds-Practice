@@ -43,6 +43,7 @@
 		78C54DC52A21C21B00F2C37F /* FailableDeleteFeedStoreSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C54DC42A21C21B00F2C37F /* FailableDeleteFeedStoreSpec.swift */; };
 		78C54DC82A21F3F100F2C37F /* CoreDataFeedStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C54DC72A21F3F100F2C37F /* CoreDataFeedStoreTests.swift */; };
 		78C54DCD2A21FFB100F2C37F /* CoreDataFeedStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C54DCC2A21FFB100F2C37F /* CoreDataFeedStore.swift */; };
+		78D85EFC2A246CD300B08EC6 /* CoreDataHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D85EFB2A246CD300B08EC6 /* CoreDataHelper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -99,6 +100,7 @@
 		78C54DC42A21C21B00F2C37F /* FailableDeleteFeedStoreSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailableDeleteFeedStoreSpec.swift; sourceTree = "<group>"; };
 		78C54DC72A21F3F100F2C37F /* CoreDataFeedStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataFeedStoreTests.swift; sourceTree = "<group>"; };
 		78C54DCC2A21FFB100F2C37F /* CoreDataFeedStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataFeedStore.swift; sourceTree = "<group>"; };
+		78D85EFB2A246CD300B08EC6 /* CoreDataHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -278,6 +280,7 @@
 			children = (
 				78C54DCC2A21FFB100F2C37F /* CoreDataFeedStore.swift */,
 				785375F42A221E0B00051806 /* FeedStore.xcdatamodeld */,
+				78D85EFB2A246CD300B08EC6 /* CoreDataHelper.swift */,
 			);
 			path = CoreData;
 			sourceTree = "<group>";
@@ -421,6 +424,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				78D85EFC2A246CD300B08EC6 /* CoreDataHelper.swift in Sources */,
 				787D83D929E00531002C6B90 /* RemoteFeedLoaderApi.swift in Sources */,
 				787D83DD29E5239D002C6B90 /* FeedItemsMapper.swift in Sources */,
 				78C54DA82A1258F000F2C37F /* RemoteFeedItem.swift in Sources */,

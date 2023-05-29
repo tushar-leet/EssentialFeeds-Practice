@@ -15,7 +15,10 @@ public class ManagedCache: NSManagedObject {
     var localFeed:[LocalFeedImage]{
         feed.compactMap{($0 as? ManagedFeedImage)?.local}
     }
-    
+
+ }
+
+extension ManagedCache{
     static func find(in context: NSManagedObjectContext) throws -> ManagedCache? {
         let request = NSFetchRequest<ManagedCache>(entityName: entity().name!)
         request.returnsObjectsAsFaults = false
@@ -26,4 +29,4 @@ public class ManagedCache: NSManagedObject {
         try find(in: context).map(context.delete)
         return ManagedCache(context: context)
     }
- }
+}

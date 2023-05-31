@@ -8,8 +8,6 @@
 import Foundation
 import EssentialFeeds
 
-
-
 func uniqueImageFeed() -> (models:[FeedImage],localModel:[LocalFeedImage]){
     let items = [uniqueFeed(),uniqueFeed()]
     let localFeedItems = items.map{LocalFeedImage(id: $0.id, description: $0.description, location: $0.location, url: $0.url)}

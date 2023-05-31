@@ -17,8 +17,8 @@ import CoreData
  }
 
 extension ManagedFeedImage{
-    static func images(from localFeed: [LocalFeedImage], in context: NSManagedObjectContext) -> NSSet {
-        return NSSet(array: localFeed.map { local in
+    static func images(from localFeed: [LocalFeedImage], in context: NSManagedObjectContext) -> NSOrderedSet {
+        return NSOrderedSet(array: localFeed.map { local in
             let managed = ManagedFeedImage(context: context)
             managed.id = local.id
             managed.imageDescription = local.description

@@ -22,19 +22,7 @@ final class EssentialFeedCacheIntegrationTest: XCTestCase {
     
     func test_load_deliversNoItemOnEmptyCache(){
         let sut = makeSUT()
-        let expectation = expectation(description: "Wait for load completion")
-        
-        sut.load{ result in
-            switch result{
-            case let .success(feedImge):
-                XCTAssertEqual(feedImge, [],"expected empty feed image")
-            case let .failure(error):
-                XCTFail("expected successfull fead result got \(error) instead")
-            }
-            expectation.fulfill()
-        }
-        
-        wait(for: [expectation], timeout: 1.0)
+        expect(sut: sut, toload: [])
     }
     
     func test_load_deliversItemsSavedOnSeprateInstance(){
@@ -51,18 +39,7 @@ final class EssentialFeedCacheIntegrationTest: XCTestCase {
         
         wait(for: [saveExp], timeout: 1.0)
         
-        let loadExp = expectation(description: "Wait for load result")
-        sutToPerformFetch.load { loadResult in
-            switch loadResult{
-            case let .success(imageFeed):
-                XCTAssertEqual(imageFeed, feed)
-            case let .failure(error):
-                XCTFail("expected to save obj successfully but got : \(error) insead")
-            }
-            loadExp.fulfill()
-        }
-        
-        wait(for: [loadExp], timeout: 1.0)
+        expect(sut: sutToPerformFetch, toload: feed)
     }
     
     // MARK: - HELPERS
@@ -75,6 +52,21 @@ final class EssentialFeedCacheIntegrationTest: XCTestCase {
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(store, file: file, line: line)
         return sut
+    }
+    
+    private func expect(sut:LocalFeedLoader,toload expectedFeed:[FeedImage],file:StaticString = #filePath, line:UInt = #line){
+        let loadExp = expectation(description: "Wait for load result")
+        sut.load { loadResult in
+            switch loadResult{
+            case let .success(imageFeed):
+                XCTAssertEqual(imageFeed, expectedFeed)
+            case let .failure(error):
+                XCTFail("expected to save obj successfully but got : \(error) insead")
+            }
+            loadExp.fulfill()
+        }
+        
+        wait(for: [loadExp], timeout: 1.0)
     }
     
     private func cachesDirectory() -> URL{

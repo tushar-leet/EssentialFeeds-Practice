@@ -9,9 +9,11 @@ import Foundation
 import EssentialFeeds
 
 class FeedStoreSpy:FeedStore{
-    typealias DeletionCompletion = (Error?) -> ()
-    typealias InsertCompletion = (Error?) -> ()
-    typealias RetrieveCompletion = (RetrieveCachedFeedResult) -> ()
+    typealias DeletionResult = Result<Void,Error>
+    typealias DeletionCompletion = (DeletionResult) -> ()
+    typealias InsertionResult = Result<Void,Error>
+    typealias InsertCompletion = (InsertionResult) -> ()
+    typealias RetrieveCompletion = (FeedStore.RetrieveResult) -> ()
 
     enum ReceivedMessages:Equatable{
         case deleteCachedFeed
@@ -29,12 +31,12 @@ class FeedStoreSpy:FeedStore{
         receivedMessages.append(.deleteCachedFeed)
     }
 
-    func completeDeletion(with error:Error?, at index:Int = 0){
-        deletionCompletion[index](error)
+    func completeDeletion(with error:Error, at index:Int = 0){
+        deletionCompletion[index](.failure(error))
     }
 
     func completeDeletionSuccessfully(at index:Int = 0){
-        deletionCompletion[index](nil)
+        deletionCompletion[index](.success(()))
     }
 
     func insert(_ feeds:[LocalFeedImage],timestamp:Date,completion:@escaping InsertCompletion){
@@ -42,12 +44,12 @@ class FeedStoreSpy:FeedStore{
         insertCompletion.append(completion)
     }
 
-    func completeInsertion(with error:Error?, at index:Int = 0){
-        insertCompletion[index](error)
+    func completeInsertion(with error:Error, at index:Int = 0){
+        insertCompletion[index](.failure(error))
     }
 
     func completeInsertionSuccessfully(at index:Int = 0){
-        insertCompletion[index](nil)
+        insertCompletion[index](.success(()))
     }
     
     func retrieve(completion:@escaping RetrieveCompletion) {
@@ -60,10 +62,10 @@ class FeedStoreSpy:FeedStore{
     }
     
     func completeRetrievelWithEmptyCache(at index:Int = 0){
-        retrieveCompletion[index](.empty)
+        retrieveCompletion[index](.success(.none))
     }
     
     func completeRetrievel(with feed:[LocalFeedImage],timestamp:Date,at index:Int = 0){
-        retrieveCompletion[index](.found(feed:feed,timestamp:timestamp))
+        retrieveCompletion[index](.success(CacheFeed(feed:feed,timestamp:timestamp)))
     }
 }

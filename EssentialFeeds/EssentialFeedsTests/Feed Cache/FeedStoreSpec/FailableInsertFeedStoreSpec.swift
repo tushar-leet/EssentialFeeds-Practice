@@ -18,6 +18,6 @@ import EssentialFeeds
      func assertThatInsertHasNoSideEffectsOnInsertionError(on sut: FeedStore, file: StaticString = #file, line: UInt = #line) {
          insert((uniqueImageFeed().localModel, Date()), to: sut)
 
-         expect(sut, toRetrieve: .empty, file: file, line: line)
+         expect(sut, toRetrieve: .success(.none), file: file, line: line)
      }
  }

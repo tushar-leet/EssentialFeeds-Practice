@@ -13,6 +13,7 @@
 		788BE9BD2A3505AF000050BB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 788BE9BC2A3505AF000050BB /* Assets.xcassets */; };
 		788BE9C02A3505AF000050BB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 788BE9BE2A3505AF000050BB /* LaunchScreen.storyboard */; };
 		788BE9C82A350CE2000050BB /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788BE9C72A350CE1000050BB /* FeedViewController.swift */; };
+		788BE9CA2A350DC4000050BB /* FeedImageViewModel+Prototype.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788BE9C92A350DC4000050BB /* FeedImageViewModel+Prototype.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		788BE9BF2A3505AF000050BB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		788BE9C12A3505AF000050BB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		788BE9C72A350CE1000050BB /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
+		788BE9C92A350DC4000050BB /* FeedImageViewModel+Prototype.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FeedImageViewModel+Prototype.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +65,7 @@
 				788BE9BE2A3505AF000050BB /* LaunchScreen.storyboard */,
 				788BE9C12A3505AF000050BB /* Info.plist */,
 				788BE9C72A350CE1000050BB /* FeedViewController.swift */,
+				788BE9C92A350DC4000050BB /* FeedImageViewModel+Prototype.swift */,
 			);
 			path = Prototype;
 			sourceTree = "<group>";
@@ -139,6 +142,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				788BE9B42A35058A000050BB /* AppDelegate.swift in Sources */,
+				788BE9CA2A350DC4000050BB /* FeedImageViewModel+Prototype.swift in Sources */,
 				788BE9C82A350CE2000050BB /* FeedViewController.swift in Sources */,
 				788BE9B62A35058A000050BB /* SceneDelegate.swift in Sources */,
 			);

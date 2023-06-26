@@ -9,47 +9,34 @@ import Foundation
 import UIKit
 import EssentialFeeds
 
-public protocol FeedImageDataLoaderTask{
-    func cancel()
-}
-
-public protocol FeedImageDataLoader{
-    typealias Result = Swift.Result<Data, Error>
-    func loadImageData(from url:URL, completion: @escaping (Result) -> Void) -> FeedImageDataLoaderTask
-}
 
 public final class FeedViewController:UITableViewController,UITableViewDataSourcePrefetching {
     
-    public var feedLoader: FeedLoader?
-    private var tableModel = [FeedImage]()
+    private var refreshController: FeedRefreshViewController?
+    private var tableModel = [FeedImage](){
+        didSet{
+            tableView.reloadData()
+        }
+    }
     private var imageLoader:FeedImageDataLoader?
     private var tasks = [IndexPath: FeedImageDataLoaderTask]()
     
     public convenience init(feedLoader:FeedLoader,imageLoader:FeedImageDataLoader){
         self.init()
-        self.feedLoader = feedLoader
+        refreshController =  FeedRefreshViewController(feedLoader: feedLoader)
         self.imageLoader = imageLoader
     }
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        refreshControl = UIRefreshControl()
-        tableView.prefetchDataSource = self
-        refreshControl?.addTarget(self, action: #selector(load), for: .valueChanged)
-        load()
-    }
-    
-    @objc func load(){
-        refreshControl?.beginRefreshing()
-        feedLoader?.load{ [weak self] result in
-            if let feed = try? result.get() {
-                self?.tableModel = feed
-                self?.tableView.reloadData()
-            }
-                self?.refreshControl?.endRefreshing()
+        refreshControl = refreshController?.view
+        refreshController?.onRefresh = { [weak self] feed in
+            self?.tableModel = feed
         }
+        tableView.prefetchDataSource = self
+        refreshController?.refresh()
     }
-    
+ 
     public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return tableModel.count
     }

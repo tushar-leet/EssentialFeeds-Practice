@@ -109,6 +109,7 @@ Location</string>
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="descriptionLabel" destination="H63-o4-rxp" id="E5j-tE-mTy"/>
+                                    <outlet property="feedImageContainer" destination="FAU-iA-TTE" id="tcQ-yQ-kG8"/>
                                     <outlet property="feedImageView" destination="tsT-7G-iNQ" id="sQq-AV-2Sg"/>
                                     <outlet property="locationContainer" destination="iiY-WY-aBZ" id="QkY-tG-bGq"/>
                                     <outlet property="locationLabel" destination="gSb-GM-nc6" id="JXi-cJ-nMF"/>
@@ -121,6 +122,12 @@ Location</string>
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="My Feed" id="LcF-oA-aJX"/>
+                    <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="kAy-Z0-suw">
+                        <autoresizingMask key="autoresizingMask"/>
+                        <connections>
+                            <action selector="refresh" destination="1hh-nG-9OR" eventType="valueChanged" id="1wU-Zh-ZBG"/>
+                        </connections>
+                    </refreshControl>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RzX-Pc-Xwa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

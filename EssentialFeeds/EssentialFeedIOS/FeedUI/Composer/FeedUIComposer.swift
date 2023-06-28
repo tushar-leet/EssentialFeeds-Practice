@@ -6,6 +6,7 @@
 //
 
 import EssentialFeeds
+import UIKit
 
 public final class FeedUIComposer {
      private init() {}
@@ -16,7 +17,7 @@ public final class FeedUIComposer {
          let feedController = FeedViewController(refreshController: refreshController)
          viewModel.onFeedLoad = { [weak feedController] feed in
              feedController?.tableModel = feed.map { model in
-                 FeedImageCellController(viewModel: FeedImageViewModel(model: model, imageLoader: imageLoader))
+                 FeedImageCellController(viewModel: FeedImageViewModel(model: model, imageLoader: imageLoader, imageTransformer: UIImage.init))
              }
          }
          return feedController

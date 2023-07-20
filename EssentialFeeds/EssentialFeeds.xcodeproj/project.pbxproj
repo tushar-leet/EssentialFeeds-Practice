@@ -36,6 +36,10 @@
 		78928AC42A491D4E006B10FE /* FeedRefreshViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78928AC32A491D4E006B10FE /* FeedRefreshViewController.swift */; };
 		78928AC62A492516006B10FE /* FeedImageCellController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78928AC52A492516006B10FE /* FeedImageCellController.swift */; };
 		78928AC92A493E7F006B10FE /* FeedUIComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78928AC82A493E7F006B10FE /* FeedUIComposer.swift */; };
+		789394E82A4BC136009F0024 /* FeedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789394E72A4BC136009F0024 /* FeedViewModel.swift */; };
+		789394EA2A4BCAA8009F0024 /* FeedImageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789394E92A4BCAA8009F0024 /* FeedImageViewModel.swift */; };
+		789394EC2A57D511009F0024 /* FeedPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789394EB2A57D511009F0024 /* FeedPresenter.swift */; };
+		789394EE2A67A276009F0024 /* FeedImagePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789394ED2A67A276009F0024 /* FeedImagePresenter.swift */; };
 		78C54DA12A09FD3E00F2C37F /* CacheFeedUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C54DA02A09FD3E00F2C37F /* CacheFeedUseCaseTests.swift */; };
 		78C54DA42A0FB3D200F2C37F /* LocalFeedLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C54DA32A0FB3D200F2C37F /* LocalFeedLoader.swift */; };
 		78C54DA62A0FB50900F2C37F /* FeedStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C54DA52A0FB50900F2C37F /* FeedStore.swift */; };
@@ -144,6 +148,10 @@
 		78928AC32A491D4E006B10FE /* FeedRefreshViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedRefreshViewController.swift; sourceTree = "<group>"; };
 		78928AC52A492516006B10FE /* FeedImageCellController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageCellController.swift; sourceTree = "<group>"; };
 		78928AC82A493E7F006B10FE /* FeedUIComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedUIComposer.swift; sourceTree = "<group>"; };
+		789394E72A4BC136009F0024 /* FeedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewModel.swift; sourceTree = "<group>"; };
+		789394E92A4BCAA8009F0024 /* FeedImageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageViewModel.swift; sourceTree = "<group>"; };
+		789394EB2A57D511009F0024 /* FeedPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedPresenter.swift; sourceTree = "<group>"; };
+		789394ED2A67A276009F0024 /* FeedImagePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImagePresenter.swift; sourceTree = "<group>"; };
 		78C54DA02A09FD3E00F2C37F /* CacheFeedUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheFeedUseCaseTests.swift; sourceTree = "<group>"; };
 		78C54DA32A0FB3D200F2C37F /* LocalFeedLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalFeedLoader.swift; sourceTree = "<group>"; };
 		78C54DA52A0FB50900F2C37F /* FeedStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedStore.swift; sourceTree = "<group>"; };
@@ -352,6 +360,7 @@
 		78928AC02A491873006B10FE /* FeedUI */ = {
 			isa = PBXGroup;
 			children = (
+				789394E62A4BC0FD009F0024 /* Model */,
 				78928AC72A493E58006B10FE /* Composer */,
 				78928AC22A49188E006B10FE /* Views */,
 				78928AC12A49187F006B10FE /* Controllers */,
@@ -384,6 +393,17 @@
 				78928AC82A493E7F006B10FE /* FeedUIComposer.swift */,
 			);
 			path = Composer;
+			sourceTree = "<group>";
+		};
+		789394E62A4BC0FD009F0024 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				789394E72A4BC136009F0024 /* FeedViewModel.swift */,
+				789394E92A4BCAA8009F0024 /* FeedImageViewModel.swift */,
+				789394EB2A57D511009F0024 /* FeedPresenter.swift */,
+				789394ED2A67A276009F0024 /* FeedImagePresenter.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 		78C54D9F2A09FCEF00F2C37F /* Feed Cache */ = {
@@ -752,12 +772,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				789394EC2A57D511009F0024 /* FeedPresenter.swift in Sources */,
 				78928ABF2A49186D006B10FE /* FeedImageDataLoader.swift in Sources */,
 				78928AC42A491D4E006B10FE /* FeedRefreshViewController.swift in Sources */,
 				78928ABC2A4001F2006B10FE /* UIView+Shimmering.swift in Sources */,
 				78928AB62A398A00006B10FE /* FeedViewController.swift in Sources */,
 				78928ABA2A3C1787006B10FE /* FeedImageCell.swift in Sources */,
+				789394EE2A67A276009F0024 /* FeedImagePresenter.swift in Sources */,
+				789394EA2A4BCAA8009F0024 /* FeedImageViewModel.swift in Sources */,
 				78928AC62A492516006B10FE /* FeedImageCellController.swift in Sources */,
+				789394E82A4BC136009F0024 /* FeedViewModel.swift in Sources */,
 				78928AC92A493E7F006B10FE /* FeedUIComposer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1131,14 +1155,17 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.myself.EssentialFeedIOSTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
@@ -1151,14 +1178,17 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.myself.EssentialFeedIOSTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;

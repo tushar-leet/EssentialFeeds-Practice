@@ -47,7 +47,7 @@ final class FeedViewControllerTests: XCTestCase {
         let image1 = makeImage(description: nil, location: "another location")
         let image2 = makeImage(description: "another description", location: nil)
         let image3 = makeImage(description: nil, location: nil)
-        
+
         let (sut,loader) = makeSUT()
         
         sut.loadViewIfNeeded()
@@ -62,7 +62,7 @@ final class FeedViewControllerTests: XCTestCase {
         
         sut.simulateUserInitatedFeedReload()
         loader.completeFeedLoading(with: [image0,image1,image2,image3],1)
-        assertThat(sut, isRendering: [image0,image1,image2,image3])
+        assertThat(sut, isRendering: [image0,image1,image2,image3], withLoader: loader)
     }
     
     func test_loadFeedCompletion_doesNotAltersCurrentRendringStateOnError(){
@@ -71,11 +71,11 @@ final class FeedViewControllerTests: XCTestCase {
         
         sut.loadViewIfNeeded()
         loader.completeFeedLoading(with: [image0],0)
-        assertThat(sut, isRendering: [image0])
+        assertThat(sut, isRendering: [image0], withLoader: loader)
         
         sut.simulateUserInitatedFeedReload()
         loader.completeFeedLoadingWithError(at: 1)
-        assertThat(sut, isRendering: [image0])
+        assertThat(sut, isRendering: [image0], withLoader: loader)
     }
     
     func test_feedImageView_loadImageWhenVisible(){
@@ -254,23 +254,26 @@ final class FeedViewControllerTests: XCTestCase {
         return FeedImage(id: UUID(), description: description, location: location, url: url)
     }
     
-    private func assertThat(_ sut: FeedViewController, isRendering feed: [FeedImage], file: StaticString = #file, line: UInt = #line) {
+    private func assertThat(_ sut: FeedViewController, isRendering feed: [FeedImage],withLoader imageLoader:LoaderSpy, file: StaticString = #file, line: UInt = #line) {
         guard sut.numberOfRenderedFeedImageViews() == feed.count else {
             return XCTFail("Expected \(feed.count) images, got \(sut.numberOfRenderedFeedImageViews()) instead.", file: file, line: line)
         }
         
         feed.enumerated().forEach { index, image in
-            assertThat(sut, hasViewConfiguredFor: image, at: index, file: file, line: line)
+            assertThat(sut, hasViewConfiguredFor: image,withLoader: imageLoader, at: index, file: file, line: line)
         }
     }
 
-    private func assertThat(_ sut: FeedViewController, hasViewConfiguredFor image: FeedImage, at index: Int, file: StaticString = #file, line: UInt = #line) {
+    private func assertThat(_ sut: FeedViewController, hasViewConfiguredFor image: FeedImage,withLoader imageLoader:LoaderSpy? = nil, at index: Int, file: StaticString = #file, line: UInt = #line) {
         let view = sut.feedImageView(at: index)
-        
+
         guard let cell = view as? FeedImageCell else {
             return XCTFail("Expected \(FeedImageCell.self) instance, got \(String(describing: view)) instead", file: file, line: line)
         }
-        
+
+        let imageData0 = UIImage.make(withColor: .red).pngData()!
+        imageLoader?.completeImageLoading(with: imageData0, at: index)
+
         let shouldLocationBeVisible = (image.location != nil)
         XCTAssertEqual(cell.isShowingLocation, shouldLocationBeVisible, "Expected `isShowingLocation` to be \(shouldLocationBeVisible) for image view at index (\(index))", file: file, line: line)
         
@@ -325,7 +328,7 @@ final class FeedViewControllerTests: XCTestCase {
                 self?.cancelledImageURLs.append(url)
             }
         }
-        
+
         func completeImageLoading(with imageData:Data = Data(), at index:Int = 0){
             imageRequests[index].completion(.success(imageData))
         }

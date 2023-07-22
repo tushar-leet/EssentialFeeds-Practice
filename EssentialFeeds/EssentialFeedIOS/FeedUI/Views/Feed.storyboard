@@ -75,6 +75,9 @@ Location</string>
                                                             <rect key="frame" x="0.0" y="0.0" width="353" height="353"/>
                                                             <state key="normal" title="Button"/>
                                                             <buttonConfiguration key="configuration" style="plain" title="refresh"/>
+                                                            <connections>
+                                                                <action selector="retryButtonTapped" destination="DH7-Sa-IpY" eventType="touchUpInside" id="4dK-4U-NoL"/>
+                                                            </connections>
                                                         </button>
                                                     </subviews>
                                                     <color key="backgroundColor" red="0.89019607840000003" green="0.89019607840000003" blue="0.89019607840000003" alpha="1" colorSpace="calibratedRGB"/>
@@ -116,6 +119,14 @@ Location</string>
                                         <constraint firstAttribute="trailingMargin" secondItem="d03-ab-AXy" secondAttribute="trailing" id="aM0-2D-iPn"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="descriptionLabel" destination="2oY-fk-ekP" id="Nin-oP-wJ1"/>
+                                    <outlet property="feedImageContainer" destination="x2j-nc-1qb" id="FYf-Fv-II3"/>
+                                    <outlet property="feedImageRetryButton" destination="ZbE-f9-dgQ" id="gTc-YM-17X"/>
+                                    <outlet property="feedImageView" destination="h1l-w1-F4i" id="Phd-Hl-QWx"/>
+                                    <outlet property="locationContainer" destination="nqD-cH-nGx" id="uJD-Y8-iaz"/>
+                                    <outlet property="locationLabel" destination="BSJ-wi-5Ia" id="6Ds-9I-zK6"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>

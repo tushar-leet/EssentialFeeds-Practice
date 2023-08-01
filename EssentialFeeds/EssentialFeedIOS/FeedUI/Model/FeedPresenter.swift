@@ -24,7 +24,7 @@ protocol FeedLoadingView{
 }
 
 struct FeedErrorViewModel {
-    let message: String
+    let message: String?
 }
 
 protocol FeedErrorView {
@@ -57,6 +57,7 @@ final class FeedPresenter{
     }
     
     func didStartLoadingFeed(){
+        errorView.display(FeedErrorViewModel(message: nil))
         guard Thread.isMainThread else {
             return DispatchQueue.main.async { [weak self] in self?.didStartLoadingFeed() }
         }

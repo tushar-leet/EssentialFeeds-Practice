@@ -53,7 +53,7 @@ final class FeedPresenter{
     }
     
     func didStartLoadingFeed(){
-        errorView.display(FeedErrorViewModel(message: nil))
+        errorView.display(.noError)
         guard Thread.isMainThread else {
             return DispatchQueue.main.async { [weak self] in self?.didStartLoadingFeed() }
         }
@@ -69,7 +69,7 @@ final class FeedPresenter{
     }
 
     func didFinishLoadingFeed(with error:Error){
-        errorView.display(FeedErrorViewModel(message: feedLoadError))
+        errorView.display(.error(message: feedLoadError))
         guard Thread.isMainThread else {
             return DispatchQueue.main.async { [weak self] in self?.didFinishLoadingFeed(with: error) }
         }

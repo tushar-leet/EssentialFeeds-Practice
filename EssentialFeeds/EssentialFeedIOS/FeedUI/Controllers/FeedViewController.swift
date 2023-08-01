@@ -16,7 +16,7 @@ public final class ErrorView: UIView {
     public var message: String?
 }
 
-public final class FeedViewController:UITableViewController,UITableViewDataSourcePrefetching,FeedLoadingView {
+public final class FeedViewController:UITableViewController,UITableViewDataSourcePrefetching,FeedLoadingView,FeedErrorView {
     
     var delegate:FeedViewControllerDelegate?
     public let errorView = ErrorView()
@@ -45,6 +45,10 @@ public final class FeedViewController:UITableViewController,UITableViewDataSourc
         }
     }
 
+    func display(_ viewModel: FeedErrorViewModel) {
+        errorView.message = viewModel.message
+    }
+    
     public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return tableModel.count
     }

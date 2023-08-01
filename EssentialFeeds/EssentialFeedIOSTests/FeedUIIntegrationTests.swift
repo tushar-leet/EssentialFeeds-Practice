@@ -286,6 +286,14 @@ final class FeedUIIntegrationTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
 
+    func test_errorView_doesNotRenderErrorOnLoad() {
+        let (sut, _) = makeSUT()
+        
+        sut.loadViewIfNeeded()
+        
+        XCTAssertEqual(sut.errorMessage, nil)
+    }
+
     // MARK: HELPERS
     
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (controller:FeedViewController,spy:LoaderSpy){
@@ -411,6 +419,10 @@ private extension UIButton {
  }
 
 private extension FeedViewController{
+    var errorMessage: String? {
+        return errorView.message
+    }
+    
     func simulateUserInitatedFeedReload(){
         refreshControl?.simulatePullToRefresh()
     }

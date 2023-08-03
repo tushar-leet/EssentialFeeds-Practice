@@ -7,13 +7,14 @@
 
 import Foundation
 import UIKit
+import EssentialFeeds
 
 protocol FeedViewControllerDelegate {
      func didRequestFeedRefresh()
  }
 
 public final class FeedViewController:UITableViewController,UITableViewDataSourcePrefetching,FeedLoadingView,FeedErrorView {
-    
+   
     var delegate:FeedViewControllerDelegate?
     @IBOutlet private(set) public var errorView: ErrorView?
     var tableModel = [FeedImageCellController](){
@@ -33,11 +34,11 @@ public final class FeedViewController:UITableViewController,UITableViewDataSourc
         delegate?.didRequestFeedRefresh()
     }
     
-    func display(_ viewModel: FeedLoadingViewModel) {
+    public func display(_ viewModel: FeedLoadingViewModel) {
         refreshControl?.update(isRefreshing: viewModel.isLoading)
     }
 
-    func display(_ viewModel: FeedErrorViewModel) {
+    public func display(_ viewModel: EssentialFeeds.FeedErrorViewModel) {
         errorView?.message = viewModel.message
     }
     

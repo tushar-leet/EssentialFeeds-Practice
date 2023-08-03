@@ -17,7 +17,7 @@ public final class FeedUIComposer {
          let feedController = FeedViewController.makeWith(
                       delegate: presentationAdapter,
                       title: FeedPresenter.title)
-         presentationAdapter.presenter = FeedPresenter(feedView: FeedViewAdapter(controller: feedController,loader:  MainQueueDispatchDecorator(decoratee: imageLoader)), loadingView: WeakRefVirtualProxy(object: feedController), errorView: WeakRefVirtualProxy(object: feedController))
+         presentationAdapter.presenter = FeedPresenter(errorView: WeakRefVirtualProxy(object: feedController), loadingView: WeakRefVirtualProxy(object: feedController), feedView: FeedViewAdapter(controller: feedController,loader:  MainQueueDispatchDecorator(decoratee: imageLoader)))
          return feedController
      }
  }
@@ -54,9 +54,9 @@ extension WeakRefVirtualProxy: FeedImageView where T: FeedImageView, T.Image == 
  }
 
 extension WeakRefVirtualProxy: FeedErrorView where T: FeedErrorView {
-     func display(_ viewModel: FeedErrorViewModel) {
-         object?.display(viewModel)
-     }
+    func display(_ viewModel: EssentialFeeds.FeedErrorViewModel) {
+        object?.display(viewModel)
+    }
  }
 
 private final class FeedViewAdapter:FeedView{

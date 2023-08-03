@@ -42,7 +42,6 @@
 		789394F42A6BE844009F0024 /* UITableView+Dequeing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789394F32A6BE844009F0024 /* UITableView+Dequeing.swift */; };
 		789394F62A6BE913009F0024 /* UIView+Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789394F52A6BE913009F0024 /* UIView+Animation.swift */; };
 		789394FB2A775AB1009F0024 /* FeedViewControllerTest+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789394FA2A775AB1009F0024 /* FeedViewControllerTest+Localization.swift */; };
-		789395032A7768C3009F0024 /* FeedLocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789395022A7768C3009F0024 /* FeedLocalizationTests.swift */; };
 		789395052A78B5B5009F0024 /* MainQueueDispatchDecorator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789395042A78B5B5009F0024 /* MainQueueDispatchDecorator.swift */; };
 		7893950E2A78BFDE009F0024 /* FeedPresentationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7893950D2A78BFDE009F0024 /* FeedPresentationTest.swift */; };
 		789395102A78CF02009F0024 /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7893950F2A78CF02009F0024 /* ErrorView.swift */; };
@@ -53,6 +52,7 @@
 		789395252A7A277E009F0024 /* FeedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789395242A7A277E009F0024 /* FeedViewModel.swift */; };
 		789395272A7A2797009F0024 /* FeedLoadingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789395262A7A2797009F0024 /* FeedLoadingViewModel.swift */; };
 		789395292A7A27AA009F0024 /* FeedErrorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789395282A7A27AA009F0024 /* FeedErrorViewModel.swift */; };
+		7893952A2A7B53B2009F0024 /* FeedLocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789395022A7768C3009F0024 /* FeedLocalizationTests.swift */; };
 		78C54DA12A09FD3E00F2C37F /* CacheFeedUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C54DA02A09FD3E00F2C37F /* CacheFeedUseCaseTests.swift */; };
 		78C54DA42A0FB3D200F2C37F /* LocalFeedLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C54DA32A0FB3D200F2C37F /* LocalFeedLoader.swift */; };
 		78C54DA62A0FB50900F2C37F /* FeedStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C54DA52A0FB50900F2C37F /* FeedStore.swift */; };
@@ -368,7 +368,6 @@
 		788BEA112A351C2A000050BB /* EssentialFeedIOSTests */ = {
 			isa = PBXGroup;
 			children = (
-				789395012A77689C009F0024 /* FeedPresentation */,
 				789394F92A775A8A009F0024 /* Helpers */,
 				788BEA122A351C2A000050BB /* FeedUIIntegrationTests.swift */,
 			);
@@ -448,17 +447,10 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
-		789395012A77689C009F0024 /* FeedPresentation */ = {
-			isa = PBXGroup;
-			children = (
-				789395022A7768C3009F0024 /* FeedLocalizationTests.swift */,
-			);
-			path = FeedPresentation;
-			sourceTree = "<group>";
-		};
 		7893950C2A78BFC8009F0024 /* Feed Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				789395022A7768C3009F0024 /* FeedLocalizationTests.swift */,
 				7893950D2A78BFDE009F0024 /* FeedPresentationTest.swift */,
 			);
 			path = "Feed Presentation";
@@ -840,6 +832,7 @@
 			files = (
 				78C54DC32A21C1FB00F2C37F /* FailableInsertFeedStoreSpec.swift in Sources */,
 				78C54DC52A21C21B00F2C37F /* FailableDeleteFeedStoreSpec.swift in Sources */,
+				7893952A2A7B53B2009F0024 /* FeedLocalizationTests.swift in Sources */,
 				78C54DC12A21C1B500F2C37F /* FailableRetrieveFeedStoreSpec.swift in Sources */,
 				78C54DBF2A21BC9300F2C37F /* XCTestCase+FeedStoreSpecs.swift in Sources */,
 				7893950E2A78BFDE009F0024 /* FeedPresentationTest.swift in Sources */,
@@ -894,7 +887,6 @@
 			files = (
 				788BEA132A351C2A000050BB /* FeedUIIntegrationTests.swift in Sources */,
 				78928AB42A3974FF006B10FE /* XCTestCaseMemoryLeakTrackingHelper.swift in Sources */,
-				789395032A7768C3009F0024 /* FeedLocalizationTests.swift in Sources */,
 				789394FB2A775AB1009F0024 /* FeedViewControllerTest+Localization.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

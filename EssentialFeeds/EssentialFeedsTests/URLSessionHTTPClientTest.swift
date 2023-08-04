@@ -163,17 +163,23 @@ class URLSessionHTTPClientTest: XCTestCase {
     
     // MARK: Helpers
     private class URLProtocolStub:URLProtocol{
-        private static var stubs:Stub?
-        private static var requestObserver:((URLRequest) -> Void)?
-        
-        static func stub(data:Data?,response:URLResponse?, error:Error?){
-            stubs = Stub(data:data,response: response,error: error)
-        }
-        
+
+        private static let queue = DispatchQueue(label: "URLProtocolStub.queue")
         private struct Stub{
             let data:Data?
             let response:URLResponse?
             let error:Error?
+            let requestObserver: ((URLRequest) -> Void)?
+        }
+        
+        private static var _stub: Stub?
+        private static var stub: Stub? {
+            get { return queue.sync { _stub } }
+            set { queue.sync { _stub = newValue } }
+        }
+        
+        static func stub(data:Data?,response:URLResponse?, error:Error?){
+            stub = Stub(data: data, response: response, error: error, requestObserver: nil)
         }
         
         static func startInterceptingRequest(){
@@ -182,12 +188,11 @@ class URLSessionHTTPClientTest: XCTestCase {
         
         static func stopInterceptingRequest(){
             URLProtocol.unregisterClass(URLProtocolStub.self)
-            stubs = nil
-            requestObserver = nil
+            stub = nil
         }
         
         static func observerRequest(observer: @escaping (URLRequest) -> Void){
-            requestObserver = observer
+            stub = Stub(data: nil, response: nil, error: nil, requestObserver: observer)
         }
         
         override class func canInit(with request: URLRequest) -> Bool {
@@ -200,16 +205,13 @@ class URLSessionHTTPClientTest: XCTestCase {
         
         override func startLoading() {
             
-            if let requestObserver = URLProtocolStub.requestObserver {
-                client?.urlProtocolDidFinishLoading(self)
-                requestObserver(request)
-                return
-            }
-            guard let stub = URLProtocolStub.stubs else { return }
+            guard let stub = URLProtocolStub.stub else { return }
             
             if let data = stub.data {
                 client?.urlProtocol(self, didLoad: data)
             }
+            
+            stub.requestObserver?(request)
             
             if let response = stub.response {
                 client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)

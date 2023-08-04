@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import EssentialFeedIOS
+@testable import EssentialFeeds
 
 final class FeedLocalizationTests: XCTestCase {
     

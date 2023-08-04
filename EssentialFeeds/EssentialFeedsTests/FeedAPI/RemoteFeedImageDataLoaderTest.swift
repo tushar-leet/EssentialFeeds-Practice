@@ -134,24 +134,6 @@ class RemoteFeedImageDataLoaderTests: XCTestCase {
         task.cancel()
         XCTAssertEqual(client.cancelledURLs, [url], "Expected cancelled URL request after task is cancelled")
     }
-//    func test_cancelGetFromURLTask_cancelsURLRequest() {
-//        let url = anyURL()
-//        let exp = expectation(description: "Wait for request")
-//
-//        let task = makeSUT().get(from: url) { result in
-//            switch result {
-//            case let .failure(error as NSError) where error.code == URLError.cancelled.rawValue:
-//                break
-//
-//            default:
-//                XCTFail("Expected cancelled result, got \(result) instead")
-//            }
-//            exp.fulfill()
-//        }
-//
-//        task.cancel()
-//        wait(for: [exp], timeout: 1.0)
-//    }
     
     private func makeSUT(url: URL = anyURL(), file: StaticString = #file, line: UInt = #line) -> (sut: RemoteFeedImageDataLoader, client: HTTPClientSpy) {
         let client = HTTPClientSpy()

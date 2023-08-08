@@ -111,6 +111,32 @@ final class ValidateFeedCacheUseCaseTest: XCTestCase {
         })
     }
     
+    
+    func test_validateCache_failsOnDeletionErrorOfExpiredCache() {
+        let feed = uniqueImageFeed()
+        let fixedCurrentDate = Date()
+        let expiredTimestamp = fixedCurrentDate.minusFeedCacheMaxAge().adding(seconds: -1)
+        let (sut, store) = makeSut(currentDate: { fixedCurrentDate })
+        let deletionError = anyNSError()
+
+        expect(sut, toCompleteWith: .failure(deletionError), when: {
+            store.completeRetrievel(with: feed.localModel, timestamp: expiredTimestamp)
+            store.completeDeletion(with: deletionError)
+        })
+    }
+
+    func test_validateCache_succeedsOnSuccessfulDeletionOfExpiredCache() {
+        let feed = uniqueImageFeed()
+        let fixedCurrentDate = Date()
+        let expiredTimestamp = fixedCurrentDate.minusFeedCacheMaxAge().adding(seconds: -1)
+        let (sut, store) = makeSut(currentDate: { fixedCurrentDate })
+
+        expect(sut, toCompleteWith: .success(()), when: {
+            store.completeRetrievel(with: feed.localModel, timestamp: expiredTimestamp)
+            store.completeDeletionSuccessfully()
+        })
+    }
+    
     private func makeSut(currentDate:@escaping ()->Date = Date.init,file:StaticString = #filePath, line:UInt = #line) -> (LocalFeedLoader,FeedStoreSpy){
         let store = FeedStoreSpy()
         let sut = LocalFeedLoader(store:store, currentDate: currentDate)

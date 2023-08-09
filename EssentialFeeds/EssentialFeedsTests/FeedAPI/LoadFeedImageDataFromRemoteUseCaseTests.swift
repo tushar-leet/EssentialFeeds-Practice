@@ -8,11 +8,11 @@
 import XCTest
 import EssentialFeeds
 
-class LoadFeedFromRemoteFeedUseCaseTests:XCTestCase{
+class LoadFeedImageDataFromRemoteUseCaseTests:XCTestCase{
     func test_init_doesNotLoadDataFromURL(){
         let (_,client) = makeSut()
         
-        XCTAssertTrue(client.requestedUrls.isEmpty)
+        XCTAssertTrue(client.requestedURLs.isEmpty)
     }
 
     func test_load_requestsDataFromURL(){
@@ -21,7 +21,7 @@ class LoadFeedFromRemoteFeedUseCaseTests:XCTestCase{
         
         sut.load()
         
-        XCTAssertEqual([url], client.requestedUrls)
+        XCTAssertEqual([url], client.requestedURLs)
     }
 
     func test_loadTwice_requestsDataFromURLTwice(){
@@ -31,7 +31,7 @@ class LoadFeedFromRemoteFeedUseCaseTests:XCTestCase{
         sut.load()
         sut.load()
         
-        XCTAssertEqual([url,url], client.requestedUrls)
+        XCTAssertEqual([url,url], client.requestedURLs)
     }
 
     func test_load_deliversErrorOnClientError(){
@@ -151,27 +151,5 @@ class LoadFeedFromRemoteFeedUseCaseTests:XCTestCase{
         trackForMemoryLeaks(sut)
         trackForMemoryLeaks(client)
         return (sut,client)
-    }
-    
-    private class HTTPClientSpy:HTTPClient{
-
-        var requestedUrls:[URL]{
-            return messages.map{$0.url}
-        }
-
-        var messages = [(url:URL,completion: (HTTPClient.Result) -> Void)]()
-
-        func get(from url: URL, completion: @escaping (HTTPClient.Result) -> Void) {
-            messages.append((url,completion))
-        }
-
-        func complete(with error:Error, at index:Int = 0){
-            messages[index].completion(.failure(error))
-        }
-
-        func complete(withStatusCode code:Int,data:Data, at index:Int = 0){
-          let response = HTTPURLResponse(url: requestedUrls[index], statusCode: code, httpVersion: nil, headerFields:nil)!
-            messages[index].completion(.success((data,response)))
-        }
     }
 }

@@ -17,14 +17,16 @@ import EssentialFeeds
          self.fallback = fallback
      }
      
-     private class Task: FeedImageDataLoaderTask {
+     private class TaskWrapper: FeedImageDataLoaderTask {
+         var wrapped: FeedImageDataLoaderTask?
          func cancel() {
 
          }
      }
      
      func loadImageData(from url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) -> FeedImageDataLoaderTask {
-         _ = primary.loadImageData(from: url) { [weak self] result in
+         let task = TaskWrapper()
+         task.wrapped  = primary.loadImageData(from: url) { [weak self] result in
              switch result {
              case .success:
                  break
@@ -34,7 +36,7 @@ import EssentialFeeds
              }
              
          }
-         return Task()
+         return task
      }
  }
 

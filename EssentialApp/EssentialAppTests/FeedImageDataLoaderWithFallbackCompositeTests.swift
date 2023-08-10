@@ -145,12 +145,6 @@ import EssentialApp
          return Data("any data".utf8)
      }
 
-     private func trackForMemoryLeaks(_ instance: AnyObject, file: StaticString = #file, line: UInt = #line) {
-         addTeardownBlock { [weak instance] in
-             XCTAssertNil(instance, "Instance should have been deallocated. Potential memory leak.", file: file, line: line)
-         }
-     }
-     
      private func expect(_ sut: FeedImageDataLoader, toCompleteWith expectedResult: FeedImageDataLoader.Result, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
          let exp = expectation(description: "Wait for load completion")
          

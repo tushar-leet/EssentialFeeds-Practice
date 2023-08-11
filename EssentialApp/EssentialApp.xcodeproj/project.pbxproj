@@ -24,6 +24,7 @@
 		789CFBC82A8346910095E031 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 789CFBC72A8346910095E031 /* Assets.xcassets */; };
 		789CFBCB2A8346910095E031 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 789CFBC92A8346910095E031 /* LaunchScreen.storyboard */; };
 		78FE02442A85ECAE00328B03 /* FeedLoaderCacheDecoratorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FE02432A85ECAE00328B03 /* FeedLoaderCacheDecoratorTest.swift */; };
+		78FE02462A85EFD800328B03 /* FeedLoaderStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FE02452A85EFD800328B03 /* FeedLoaderStub.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,6 +71,7 @@
 		789CFBCA2A8346910095E031 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		789CFBCC2A8346910095E031 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		78FE02432A85ECAE00328B03 /* FeedLoaderCacheDecoratorTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedLoaderCacheDecoratorTest.swift; sourceTree = "<group>"; };
+		78FE02452A85EFD800328B03 /* FeedLoaderStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedLoaderStub.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,6 +119,7 @@
 			children = (
 				7804F1842A84F0E300F6AC60 /* XCTestCase+MemoryLeak.swift */,
 				7804F1862A84F16500F6AC60 /* SharedTestHelpers.swift */,
+				78FE02452A85EFD800328B03 /* FeedLoaderStub.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -262,6 +265,7 @@
 				7804F1802A84B2C800F6AC60 /* FeedImageDataLoaderWithFallbackCompositeTests.swift in Sources */,
 				78FE02442A85ECAE00328B03 /* FeedLoaderCacheDecoratorTest.swift in Sources */,
 				7804F1852A84F0E300F6AC60 /* XCTestCase+MemoryLeak.swift in Sources */,
+				78FE02462A85EFD800328B03 /* FeedLoaderStub.swift in Sources */,
 				7804F1772A83583300F6AC60 /* RemoteWithLocalFallbackFeedLoaderTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -25,6 +25,7 @@
 		789CFBCB2A8346910095E031 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 789CFBC92A8346910095E031 /* LaunchScreen.storyboard */; };
 		78FE02442A85ECAE00328B03 /* FeedLoaderCacheDecoratorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FE02432A85ECAE00328B03 /* FeedLoaderCacheDecoratorTest.swift */; };
 		78FE02462A85EFD800328B03 /* FeedLoaderStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FE02452A85EFD800328B03 /* FeedLoaderStub.swift */; };
+		78FE02482A85F19200328B03 /* XCTestCase+FeedLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FE02472A85F19200328B03 /* XCTestCase+FeedLoader.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -72,6 +73,7 @@
 		789CFBCC2A8346910095E031 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		78FE02432A85ECAE00328B03 /* FeedLoaderCacheDecoratorTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedLoaderCacheDecoratorTest.swift; sourceTree = "<group>"; };
 		78FE02452A85EFD800328B03 /* FeedLoaderStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedLoaderStub.swift; sourceTree = "<group>"; };
+		78FE02472A85F19200328B03 /* XCTestCase+FeedLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+FeedLoader.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,6 +122,7 @@
 				7804F1842A84F0E300F6AC60 /* XCTestCase+MemoryLeak.swift */,
 				7804F1862A84F16500F6AC60 /* SharedTestHelpers.swift */,
 				78FE02452A85EFD800328B03 /* FeedLoaderStub.swift */,
+				78FE02472A85F19200328B03 /* XCTestCase+FeedLoader.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -262,6 +265,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7804F1872A84F16500F6AC60 /* SharedTestHelpers.swift in Sources */,
+				78FE02482A85F19200328B03 /* XCTestCase+FeedLoader.swift in Sources */,
 				7804F1802A84B2C800F6AC60 /* FeedImageDataLoaderWithFallbackCompositeTests.swift in Sources */,
 				78FE02442A85ECAE00328B03 /* FeedLoaderCacheDecoratorTest.swift in Sources */,
 				7804F1852A84F0E300F6AC60 /* XCTestCase+MemoryLeak.swift in Sources */,

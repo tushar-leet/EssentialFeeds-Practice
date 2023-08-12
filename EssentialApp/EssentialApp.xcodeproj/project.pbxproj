@@ -30,6 +30,7 @@
 		78FE02502A8639F800328B03 /* FeedImageDataLoaderSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FE024F2A8639F800328B03 /* FeedImageDataLoaderSpy.swift */; };
 		78FE02522A8740E000328B03 /* XCTestCase+FeedImageDataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FE02512A8740E000328B03 /* XCTestCase+FeedImageDataLoader.swift */; };
 		78FE02542A87453B00328B03 /* FeedImageDataLoaderCacheDecoratorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FE02532A87453B00328B03 /* FeedImageDataLoaderCacheDecoratorTest.swift */; };
+		78FE02582A87482D00328B03 /* FeedImageDataLoaderCacheDecorator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FE02572A87482D00328B03 /* FeedImageDataLoaderCacheDecorator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -82,6 +83,7 @@
 		78FE024F2A8639F800328B03 /* FeedImageDataLoaderSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageDataLoaderSpy.swift; sourceTree = "<group>"; };
 		78FE02512A8740E000328B03 /* XCTestCase+FeedImageDataLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+FeedImageDataLoader.swift"; sourceTree = "<group>"; };
 		78FE02532A87453B00328B03 /* FeedImageDataLoaderCacheDecoratorTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageDataLoaderCacheDecoratorTest.swift; sourceTree = "<group>"; };
+		78FE02572A87482D00328B03 /* FeedImageDataLoaderCacheDecorator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageDataLoaderCacheDecorator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -170,6 +172,7 @@
 				7804F17D2A84AFAC00F6AC60 /* FeedLoaderWithFallbackComposite.swift */,
 				7804F1812A84F01000F6AC60 /* FeedImageDataLoaderWithFallbackComposite.swift */,
 				78FE024B2A86002900328B03 /* FeedLoaderCacheDecorator.swift */,
+				78FE02572A87482D00328B03 /* FeedImageDataLoaderCacheDecorator.swift */,
 			);
 			path = EssentialApp;
 			sourceTree = "<group>";
@@ -299,6 +302,7 @@
 				78FE024C2A86002900328B03 /* FeedLoaderCacheDecorator.swift in Sources */,
 				789CFBC12A83467E0095E031 /* SceneDelegate.swift in Sources */,
 				7804F1822A84F01100F6AC60 /* FeedImageDataLoaderWithFallbackComposite.swift in Sources */,
+				78FE02582A87482D00328B03 /* FeedImageDataLoaderCacheDecorator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

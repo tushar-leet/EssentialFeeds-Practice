@@ -12,7 +12,7 @@ final class EssentialAppUIAcceptenceTests: XCTestCase {
         let app = XCUIApplication()
         app.launch()
         XCTAssertEqual(app.cells.count, 22)
-        XCTAssertEqual(app.firstMatch.images.count, 1)
+        XCTAssertEqual(app.firstMatch.images.count, 4)
     }
 }
 

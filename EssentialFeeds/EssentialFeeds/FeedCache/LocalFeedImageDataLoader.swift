@@ -5,7 +5,7 @@
 //  Created by TUSHAR SHARMA on 08/08/23.
 //
 
-import Foundation
+import EssentialFeeds
 
 public final class LocalFeedImageDataLoader {
      private let store: FeedImageDataStore

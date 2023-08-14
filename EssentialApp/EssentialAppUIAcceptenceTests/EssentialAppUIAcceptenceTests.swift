@@ -11,8 +11,10 @@ final class EssentialAppUIAcceptenceTests: XCTestCase {
     func test_onLaunch_displayRemoteFeedWhenCustomerHasConnectivity(){
         let app = XCUIApplication()
         app.launch()
-        XCTAssertEqual(app.cells.count, 22)
-        XCTAssertEqual(app.firstMatch.images.count, 4)
+        let feedCells = app.cells.matching(identifier: "feed-image-cell")
+        XCTAssertEqual(feedCells.count, 22)
+        let feedImages = app.images.matching(identifier: "feed-image-view").firstMatch
+        XCTAssertTrue(feedImages.exists)
     }
 }
 

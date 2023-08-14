@@ -10,6 +10,7 @@ import XCTest
 final class EssentialAppUIAcceptenceTests: XCTestCase {
     func test_onLaunch_displayRemoteFeedWhenCustomerHasConnectivity(){
         let app = XCUIApplication()
+        app.launchArguments = ["-reset"]
         app.launch()
         let feedCells = app.cells.matching(identifier: "feed-image-cell")
         XCTAssertEqual(feedCells.count, 22)
@@ -20,6 +21,7 @@ final class EssentialAppUIAcceptenceTests: XCTestCase {
     
     func test_onLaunch_displaysCachedRemoteFeedWhenCustomerHasNoConnectivity() {
         let onlineApp = XCUIApplication()
+        onlineApp.launchArguments = ["-reset"]
         onlineApp.launch()
         
         let offlineApp = XCUIApplication()

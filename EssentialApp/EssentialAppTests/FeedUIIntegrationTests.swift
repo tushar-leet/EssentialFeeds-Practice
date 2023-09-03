@@ -424,7 +424,7 @@ private extension UIButton {
      }
  }
 
-private extension FeedViewController{
+extension FeedViewController{
     var errorMessage: String? {
         return errorView?.message
     }
@@ -439,6 +439,10 @@ private extension FeedViewController{
     
     func numberOfRenderedFeedImageViews() -> Int{
         tableView.numberOfRows(inSection:feedImageSection)
+    }
+    
+    func renderedFeedImageData(at index: Int) -> Data? {
+        return simulateFeedImageViewVisible(at: index)?.renderedImage
     }
     
     @discardableResult
@@ -512,7 +516,7 @@ private extension FeedImageCell{
     }
 }
 
-private extension UIImage {
+extension UIImage {
      static func make(withColor color: UIColor) -> UIImage {
          let rect = CGRect(x: 0, y: 0, width: 1, height: 1)
          UIGraphicsBeginImageContext(rect.size)

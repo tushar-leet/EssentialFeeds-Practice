@@ -9,6 +9,7 @@ import XCTest
 import UIKit
 import EssentialFeeds
 import EssentialFeedIOS
+import EssentialApp
 
 final class FeedUIIntegrationTests: XCTestCase {
 
@@ -423,7 +424,7 @@ private extension UIButton {
      }
  }
 
-private extension FeedViewController{
+extension FeedViewController{
     var errorMessage: String? {
         return errorView?.message
     }
@@ -438,6 +439,10 @@ private extension FeedViewController{
     
     func numberOfRenderedFeedImageViews() -> Int{
         tableView.numberOfRows(inSection:feedImageSection)
+    }
+    
+    func renderedFeedImageData(at index: Int) -> Data? {
+        return simulateFeedImageViewVisible(at: index)?.renderedImage
     }
     
     @discardableResult
@@ -457,6 +462,9 @@ private extension FeedViewController{
     }
     
     func feedImageView(at row:Int) -> UITableViewCell?{
+        guard numberOfRenderedFeedImageViews() > row else {
+            return nil
+        }
         let ds = tableView.dataSource
         let index = IndexPath(row: row, section: feedImageSection)
         return ds?.tableView(tableView, cellForRowAt: index)
@@ -511,7 +519,7 @@ private extension FeedImageCell{
     }
 }
 
-private extension UIImage {
+extension UIImage {
      static func make(withColor color: UIColor) -> UIImage {
          let rect = CGRect(x: 0, y: 0, width: 1, height: 1)
          UIGraphicsBeginImageContext(rect.size)

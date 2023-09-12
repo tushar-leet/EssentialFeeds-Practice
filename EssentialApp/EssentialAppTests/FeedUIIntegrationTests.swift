@@ -87,6 +87,20 @@ final class FeedUIIntegrationTests: XCTestCase {
         assertThat(sut, isRendering: [image0], withLoader: loader)
     }
     
+    func test_loadFeedCompletion_rendersSuccessfullyLoadedEmptyFeedAfterNonEmptyFeed() {
+        let image0 = makeImage()
+        let image1 = makeImage()
+        let (sut, loader) = makeSUT()
+        
+        sut.loadViewIfNeeded()
+        loader.completeFeedLoading(with: [image0, image1],0)
+        assertThat(sut, isRendering: [image0, image1])
+        
+        sut.simulateUserInitatedFeedReload()
+        loader.completeFeedLoading(with: [], 1)
+        assertThat(sut, isRendering: [])
+    }
+    
     func test_feedImageView_loadImageWhenVisible(){
         let image0 = makeImage(url: URL(string: "http://url-0.com")!)
         let image1 = makeImage(url: URL(string: "http://url-1.com")!)
@@ -318,7 +332,8 @@ final class FeedUIIntegrationTests: XCTestCase {
         return FeedImage(id: UUID(), description: description, location: location, url: url)
     }
     
-    private func assertThat(_ sut: FeedViewController, isRendering feed: [FeedImage],withLoader imageLoader:LoaderSpy, file: StaticString = #file, line: UInt = #line) {
+    private func assertThat(_ sut: FeedViewController, isRendering feed: [FeedImage],withLoader imageLoader:LoaderSpy? = nil, file: StaticString = #file, line: UInt = #line) {
+        sut.view.enforceLayoutCycle()
         guard sut.numberOfRenderedFeedImageViews() == feed.count else {
             return XCTFail("Expected \(feed.count) images, got \(sut.numberOfRenderedFeedImageViews()) instead.", file: file, line: line)
         }

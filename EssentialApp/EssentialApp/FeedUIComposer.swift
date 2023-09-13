@@ -15,11 +15,11 @@ public final class FeedUIComposer {
 
     public static func feedComposedWith(feedLoader: @escaping () -> FeedLoader.Publisher, imageLoader:  @escaping (URL) -> FeedImageDataLoader.Publisher) -> FeedViewController {
          
-        let presentationAdapter = FeedLoaderPresentationAdapter(feedLoader: {feedLoader().dispatchOnMainQueue()})
+        let presentationAdapter = FeedLoaderPresentationAdapter(feedLoader: feedLoader)
          let feedController = FeedViewController.makeWith(
                       delegate: presentationAdapter,
                       title: FeedPresenter.title)
-         presentationAdapter.presenter = FeedPresenter(errorView: WeakRefVirtualProxy(object: feedController), loadingView: WeakRefVirtualProxy(object: feedController), feedView: FeedViewAdapter(controller: feedController,loader:  { imageLoader($0).dispatchOnMainQueue() }))
+         presentationAdapter.presenter = FeedPresenter(errorView: WeakRefVirtualProxy(object: feedController), loadingView: WeakRefVirtualProxy(object: feedController), feedView: FeedViewAdapter(controller: feedController,loader: imageLoader))
          return feedController
      }
  }
@@ -97,7 +97,9 @@ private final class FeedLoaderPresentationAdapter: FeedViewControllerDelegate {
     func didRequestFeedRefresh() {
          presenter?.didStartLoadingFeed()
 
-        cancellable = feedLoader().sink { [weak self] completion in
+        cancellable = feedLoader()
+            .dispatchOnMainQueue()
+            .sink { [weak self] completion in
             switch completion{
             case .finished: break
             case let .failure(error):
@@ -125,7 +127,9 @@ private final class FeedImageDataLoaderPresentationAdapter<View: FeedImageView, 
         presenter?.didStartLoadingImageData(for: model)
         
         let model = self.model
-        cancellable = imageLoader(model.url).sink(
+        cancellable = imageLoader(model.url)
+            .dispatchOnMainQueue()
+            .sink(
             receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .finished: break

@@ -7,18 +7,19 @@
 
 import EssentialFeeds
 import UIKit
+import Combine
 import EssentialFeedIOS
 
 public final class FeedUIComposer {
      private init() {}
 
-     public static func feedComposedWith(feedLoader: FeedLoader, imageLoader: FeedImageDataLoader) -> FeedViewController {
+    public static func feedComposedWith(feedLoader: @escaping () -> FeedLoader.Publisher, imageLoader:  @escaping (URL) -> FeedImageDataLoader.Publisher) -> FeedViewController {
          
-         let presentationAdapter = FeedLoaderPresentationAdapter(feedLoader: MainQueueDispatchDecorator(decoratee: feedLoader))
+        let presentationAdapter = FeedLoaderPresentationAdapter(feedLoader: feedLoader)
          let feedController = FeedViewController.makeWith(
                       delegate: presentationAdapter,
                       title: FeedPresenter.title)
-         presentationAdapter.presenter = FeedPresenter(errorView: WeakRefVirtualProxy(object: feedController), loadingView: WeakRefVirtualProxy(object: feedController), feedView: FeedViewAdapter(controller: feedController,loader:  MainQueueDispatchDecorator(decoratee: imageLoader)))
+         presentationAdapter.presenter = FeedPresenter(errorView: WeakRefVirtualProxy(object: feedController), loadingView: WeakRefVirtualProxy(object: feedController), feedView: FeedViewAdapter(controller: feedController,loader: imageLoader))
          return feedController
      }
  }
@@ -63,9 +64,9 @@ extension WeakRefVirtualProxy: FeedErrorView where T: FeedErrorView {
 private final class FeedViewAdapter:FeedView{
 
     private weak var controller:FeedViewController?
-    private let loader:FeedImageDataLoader
+    private let loader: (URL) -> FeedImageDataLoader.Publisher
     
-    init(controller: FeedViewController? = nil, loader: FeedImageDataLoader) {
+    init(controller: FeedViewController, loader: @escaping (URL) -> FeedImageDataLoader.Publisher) {
         self.controller = controller
         self.loader = loader
     }
@@ -85,56 +86,64 @@ private final class FeedViewAdapter:FeedView{
 }
 
 private final class FeedLoaderPresentationAdapter: FeedViewControllerDelegate {
-     private let feedLoader: FeedLoader
+     private let feedLoader: () -> FeedLoader.Publisher
      var presenter: FeedPresenter?
+    private var cancellable:Cancellable?
 
-     init(feedLoader: FeedLoader) {
+    init(feedLoader: @escaping () -> FeedLoader.Publisher) {
          self.feedLoader = feedLoader
      }
 
     func didRequestFeedRefresh() {
          presenter?.didStartLoadingFeed()
 
-         feedLoader.load { [weak self] result in
-             switch result {
-             case let .success(feed):
-                 self?.presenter?.didFinishLoadingFeed(with: feed)
-
-             case let .failure(error):
-                 self?.presenter?.didFinishLoadingFeed(with: error)
-             }
-         }
+        cancellable = feedLoader()
+            .dispatchOnMainQueue()
+            .sink { [weak self] completion in
+            switch completion{
+            case .finished: break
+            case let .failure(error):
+                self?.presenter?.didFinishLoadingFeed(with: error)
+            }
+        } receiveValue: { [weak self] feed in
+            self?.presenter?.didFinishLoadingFeed(with: feed)
+        }
      }
  }
 
 private final class FeedImageDataLoaderPresentationAdapter<View: FeedImageView, Image>: FeedImageCellControllerDelegate where View.Image == Image {
-     private let model: FeedImage
-     private let imageLoader: FeedImageDataLoader
-     private var task: FeedImageDataLoaderTask?
-
-     var presenter: FeedImagePresenter<View, Image>?
-
-     init(model: FeedImage, imageLoader: FeedImageDataLoader) {
-         self.model = model
-         self.imageLoader = imageLoader
-     }
-
-     func didRequestImage() {
-         presenter?.didStartLoadingImageData(for: model)
-
-         let model = self.model
-         task = imageLoader.loadImageData(from: model.url) { [weak self] result in
-             switch result {
-             case let .success(data):
-                 self?.presenter?.didFinishLoadingImageData(with: data, for: model)
-
-             case let .failure(error):
-                 self?.presenter?.didFinishLoadingImageData(with: error, for: model)
-             }
-         }
-     }
-
-     func didCancelImageRequest() {
-         task?.cancel()
-     }
- }
+    private let model: FeedImage
+    private let imageLoader: (URL) -> FeedImageDataLoader.Publisher
+    private var cancellable: Cancellable?
+    
+    var presenter: FeedImagePresenter<View, Image>?
+    
+    init(model: FeedImage, imageLoader: @escaping (URL) -> FeedImageDataLoader.Publisher) {
+        self.model = model
+        self.imageLoader = imageLoader
+    }
+    
+    func didRequestImage() {
+        presenter?.didStartLoadingImageData(for: model)
+        
+        let model = self.model
+        cancellable = imageLoader(model.url)
+            .dispatchOnMainQueue()
+            .sink(
+            receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .finished: break
+                    
+                case let .failure(error):
+                    self?.presenter?.didFinishLoadingImageData(with: error, for: model)
+                }
+                
+            }, receiveValue: { [weak self] data in
+                self?.presenter?.didFinishLoadingImageData(with: data, for: model)
+            })
+    }
+    
+    func didCancelImageRequest() {
+        cancellable?.cancel()
+    }
+}

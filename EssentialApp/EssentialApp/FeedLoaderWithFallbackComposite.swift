@@ -6,6 +6,7 @@
 //
 
 import EssentialFeeds
+import Combine
 
 public class FeedLoaderWithFallbackComposite:FeedLoader{
     private let primary: FeedLoader

@@ -20,8 +20,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }()
     
     private lazy var localFeedLoader: LocalFeedLoader = {
-             LocalFeedLoader(store: store, currentDate: Date.init)
-         }()
+        LocalFeedLoader(store: store, currentDate: Date.init)
+    }()
     
     private lazy var store: FeedStore & FeedImageDataStore = {
         try! CoreDataFeedStore(storeURL: NSPersistentContainer.defaultDirectoryURL().appendingPathComponent("feed-store.sqlite"))
@@ -43,18 +43,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     func configureWindow() {
-        let remoteImageLoader = RemoteFeedImageDataLoader(client: httpClient)
         
-        let localImageLoader = LocalFeedImageDataLoader(store: store)
-        
-        let feedViewController = FeedUIComposer.feedComposedWith(feedLoader: makeRemoteFeedLoaderWithLocalFallBack, imageLoader: FeedImageDataLoaderWithFallbackComposite(primary: localImageLoader, fallback: FeedImageDataLoaderCacheDecorator(decoratee: remoteImageLoader, cache: localImageLoader)))
+        let feedViewController = FeedUIComposer.feedComposedWith(feedLoader: makeRemoteFeedLoaderWithLocalFallBack, imageLoader: makeLocalImageLoaderWithRemoteFallback)
         window?.rootViewController = UINavigationController(rootViewController: feedViewController)
         window?.makeKeyAndVisible()
     }
     
     func sceneWillResignActive(_ scene: UIScene) {
-             localFeedLoader.validateCache { _ in }
-         }
+        localFeedLoader.validateCache { _ in }
+    }
     
     private func makeRemoteFeedLoaderWithLocalFallBack() -> AnyPublisher<[FeedImage],Error>{
         let remoteURL = URL(string: "https://static1.squarespace.com/static/5891c5b8d1758ec68ef5dbc2/t/5db4155a4fbade21d17ecd28/1572083034355/essential_app_feed.json")!
@@ -66,14 +63,57 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             .fallback(to: localFeedLoader.loadPublisher)
         
     }
+    
+    private func makeLocalImageLoaderWithRemoteFallback(url: URL) -> FeedImageDataLoader.Publisher {
+        let remoteImageLoader = RemoteFeedImageDataLoader(client: httpClient)
+        let localImageLoader = LocalFeedImageDataLoader(store: store)
+        
+        return localImageLoader
+            .loadImageDataPublisher(from: url)
+                    .fallback(to: {
+                        remoteImageLoader
+                            .loadImageDataPublisher(from: url)
+                            .caching(to: localImageLoader, using: url)
+                    })
+    }
 }
 
 public extension FeedLoader{
     typealias Publisher = AnyPublisher<[FeedImage],Swift.Error>
-     func loadPublisher() -> Publisher{
+    func loadPublisher() -> Publisher{
         return Deferred{
             Future(self.load)
         }.eraseToAnyPublisher()
+    }
+}
+
+public extension FeedImageDataLoader {
+    typealias Publisher = AnyPublisher<Data, Error>
+    
+    func loadImageDataPublisher(from url: URL) -> Publisher {
+        var task: FeedImageDataLoaderTask?
+        
+        return Deferred {
+            Future { completion in
+                task = self.loadImageData(from: url, completion: completion)
+            }
+        }
+        .handleEvents(receiveCancel: { task?.cancel() })
+        .eraseToAnyPublisher()
+    }
+}
+
+extension Publisher where Output == Data {
+    func caching(to cache: FeedImageDataCache, using url: URL) -> AnyPublisher<Output, Failure> {
+        handleEvents(receiveOutput: { data in
+            cache.saveIgnoringResult(data, for: url)
+        }).eraseToAnyPublisher()
+    }
+}
+
+private extension FeedImageDataCache {
+    func saveIgnoringResult(_ data: Data, for url: URL) {
+        save(data, for: url) { _ in }
     }
 }
 
@@ -96,38 +136,38 @@ extension Publisher{
 }
 
 extension DispatchQueue {
-
-     static var immediateWhenOnMainQueueScheduler: ImmediateWhenOnMainQueueScheduler {
-         ImmediateWhenOnMainQueueScheduler()
-     }
-
-     struct ImmediateWhenOnMainQueueScheduler: Scheduler {
-         typealias SchedulerTimeType = DispatchQueue.SchedulerTimeType
-         typealias SchedulerOptions = DispatchQueue.SchedulerOptions
-
-         var now: SchedulerTimeType {
-             DispatchQueue.main.now
-         }
-
-         var minimumTolerance: SchedulerTimeType.Stride {
-             DispatchQueue.main.minimumTolerance
-         }
-
-         func schedule(options: SchedulerOptions?, _ action: @escaping () -> Void) {
-             guard Thread.isMainThread else {
-                 return DispatchQueue.main.schedule(options: options, action)
-             }
-
-             action()
-         }
-
-         func schedule(after date: SchedulerTimeType, tolerance: SchedulerTimeType.Stride, options: SchedulerOptions?, _ action: @escaping () -> Void) {
-             DispatchQueue.main.schedule(after: date, tolerance: tolerance, options: options, action)
-         }
-
-         func schedule(after date: SchedulerTimeType, interval: SchedulerTimeType.Stride, tolerance: SchedulerTimeType.Stride, options: SchedulerOptions?, _ action: @escaping () -> Void) -> Cancellable {
-             DispatchQueue.main.schedule(after: date, interval: interval, tolerance: tolerance, options: options, action)
-         }
-     }
- }
+    
+    static var immediateWhenOnMainQueueScheduler: ImmediateWhenOnMainQueueScheduler {
+        ImmediateWhenOnMainQueueScheduler()
+    }
+    
+    struct ImmediateWhenOnMainQueueScheduler: Scheduler {
+        typealias SchedulerTimeType = DispatchQueue.SchedulerTimeType
+        typealias SchedulerOptions = DispatchQueue.SchedulerOptions
+        
+        var now: SchedulerTimeType {
+            DispatchQueue.main.now
+        }
+        
+        var minimumTolerance: SchedulerTimeType.Stride {
+            DispatchQueue.main.minimumTolerance
+        }
+        
+        func schedule(options: SchedulerOptions?, _ action: @escaping () -> Void) {
+            guard Thread.isMainThread else {
+                return DispatchQueue.main.schedule(options: options, action)
+            }
+            
+            action()
+        }
+        
+        func schedule(after date: SchedulerTimeType, tolerance: SchedulerTimeType.Stride, options: SchedulerOptions?, _ action: @escaping () -> Void) {
+            DispatchQueue.main.schedule(after: date, tolerance: tolerance, options: options, action)
+        }
+        
+        func schedule(after date: SchedulerTimeType, interval: SchedulerTimeType.Stride, tolerance: SchedulerTimeType.Stride, options: SchedulerOptions?, _ action: @escaping () -> Void) -> Cancellable {
+            DispatchQueue.main.schedule(after: date, interval: interval, tolerance: tolerance, options: options, action)
+        }
+    }
+}
 

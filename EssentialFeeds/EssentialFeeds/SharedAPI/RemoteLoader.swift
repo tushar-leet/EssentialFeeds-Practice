@@ -18,7 +18,7 @@ public class RemoteLoader<Resource>{
         case invalidData
     }
     
-    public typealias Result = Swift.Result<Resource,Error>
+    public typealias Result = Swift.Result<Resource,Swift.Error>
     public typealias Mapper = (Data,HTTPURLResponse) throws -> Resource
     
     public init(url:URL,client:HTTPClient,mapper:@escaping Mapper) {
@@ -27,7 +27,7 @@ public class RemoteLoader<Resource>{
         self.mapper = mapper
     }
     
-    public func load(completion:@escaping (Result) -> Void = {_ in}){
+    public func load(completion: @escaping (Result) -> Void){
         client.get(from: url, completion: { [weak self] result in
             guard  let self = self else{
                 return

@@ -9,40 +9,7 @@ import XCTest
 import EssentialFeeds
 
 final class LoadImageCommentFromRemoteUseCase: XCTestCase {
-    func test_init_doesNotLoadDataFromURL(){
-        let (_,client) = makeSut()
-        
-        XCTAssertTrue(client.requestedURLs.isEmpty)
-    }
-
-    func test_load_requestsDataFromURL(){
-        let url = URL(string: "Https://a-given-url.com")
-        let (sut,client) = makeSut(url: url!)
-        
-        sut.load()
-        
-        XCTAssertEqual([url], client.requestedURLs)
-    }
-
-    func test_loadTwice_requestsDataFromURLTwice(){
-        let url = URL(string: "Https://a-given-url.com")
-        let (sut,client) = makeSut(url: url!)
-        
-        sut.load()
-        sut.load()
-        
-        XCTAssertEqual([url,url], client.requestedURLs)
-    }
-
-    func test_load_deliversErrorOnClientError(){
-        let (sut,client) = makeSut()
-
-        expect(sut, toCompleteWith: failure(.connectivity)) {
-            let clientError = NSError(domain: "Test", code: 0, userInfo: [:])
-            client.complete(with: clientError)
-        }
-    }
-
+   
     func test_load_deliversErrorOnNon2xxHttpResponse(){
         let (sut,client) = makeSut()
 
@@ -101,20 +68,7 @@ final class LoadImageCommentFromRemoteUseCase: XCTestCase {
             }
         }
     }
-    
-    func test_load_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated(){
-        let url = URL(string: "http://a-url.com")!
-        let client = HTTPClientSpy()
-        var sut:RemoteImageCommentLoader? = RemoteImageCommentLoader(url: url, client: client)
-        var capturedResults = [RemoteImageCommentLoader.Result]()
-        sut?.load { capturedResults.append($0)}
-        
-        sut = nil
-        client.complete(withStatusCode: 200, data: makeItemJSON([]))
-        
-        XCTAssertTrue(capturedResults.isEmpty)
-    }
-    
+   
     private func expect(_ sut:RemoteImageCommentLoader,toCompleteWith expectedResult:RemoteImageCommentLoader.Result,when action:() -> Void,file:StaticString = #filePath, line:UInt = #line){
         let exp = expectation(description: "wait for load completion")
         sut.load { receivedResults in

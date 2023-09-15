@@ -60,11 +60,6 @@ class FeedItemsMapperTest:XCTestCase{
         
         return (item,json)
     }
-    
-    
-    private func failure(_ error:RemoteFeedLoader.Error) -> RemoteFeedLoader.Result{
-        .failure(error)
-    }
 }
 
 

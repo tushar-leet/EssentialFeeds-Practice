@@ -45,12 +45,16 @@ public final class FeedPresenter {
     }
     
     public func didFinishLoadingFeed(with feed:[FeedImage]){
-        feedView.display(FeedViewsModel(feed: feed))
+        feedView.display(Self.map(feed))
         loadingView.display(ResourceLoadingViewModel(isLoading: false))
     }
     
     public func didFinishLoadingFeed(with error:Error){
         errorView.display(.error(message: feedLoadError))
         loadingView.display(ResourceLoadingViewModel(isLoading: false))
+    }
+    
+    public static func map(_ feed:[FeedImage]) -> FeedViewsModel{
+        FeedViewsModel(feed: feed)
     }
 }

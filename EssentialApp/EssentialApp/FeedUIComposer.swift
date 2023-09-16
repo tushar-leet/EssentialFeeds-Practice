@@ -15,7 +15,7 @@ public final class FeedUIComposer {
 
     public static func feedComposedWith(feedLoader: @escaping () -> FeedLoader.Publisher, imageLoader:  @escaping (URL) -> FeedImageDataLoader.Publisher) -> FeedViewController {
          
-        let presentationAdapter = FeedLoaderPresentationAdapter(feedLoader: feedLoader)
+        let presentationAdapter = LoadResourcePresentationAdapter<[FeedImage],FeedViewAdapter>(feedLoader: feedLoader)
          let feedController = FeedViewController.makeWith(
                       delegate: presentationAdapter,
                       title: FeedPresenter.title)
@@ -85,19 +85,19 @@ private final class FeedViewAdapter:ResourceView{
     }
 }
 
-private final class FeedLoaderPresentationAdapter: FeedViewControllerDelegate {
-     private let feedLoader: () -> FeedLoader.Publisher
-     var presenter: LoadResourcePresenter<[FeedImage],FeedViewAdapter>?
+private final class LoadResourcePresentationAdapter<Resource,View:ResourceView> {
+     private let loader: () ->  AnyPublisher<Resource,Error>
+     var presenter: LoadResourcePresenter<Resource,View>?
     private var cancellable:Cancellable?
 
-    init(feedLoader: @escaping () -> FeedLoader.Publisher) {
-         self.feedLoader = feedLoader
+    init(feedLoader: @escaping () -> AnyPublisher<Resource,Error>) {
+         self.loader = feedLoader
      }
 
-    func didRequestFeedRefresh() {
+    func loadResource() {
          presenter?.didStartLoading()
 
-        cancellable = feedLoader()
+        cancellable = loader()
             .dispatchOnMainQueue()
             .sink { [weak self] completion in
             switch completion{
@@ -110,6 +110,12 @@ private final class FeedLoaderPresentationAdapter: FeedViewControllerDelegate {
         }
      }
  }
+
+extension LoadResourcePresentationAdapter:FeedViewControllerDelegate{
+    func didRequestFeedRefresh() {
+        loadResource()
+    }
+}
 
 private final class FeedImageDataLoaderPresentationAdapter<View: FeedImageView, Image>: FeedImageCellControllerDelegate where View.Image == Image {
     private let model: FeedImage

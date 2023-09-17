@@ -42,19 +42,64 @@
                             </connections>
                         </view>
                         <view key="tableFooterView" contentMode="scaleToFill" id="9ss-fX-uqH">
-                            <rect key="frame" x="0.0" y="692" width="393" height="16"/>
+                            <rect key="frame" x="0.0" y="228" width="393" height="16"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </view>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="FeedImageCell" rowHeight="580" id="DH7-Sa-IpY" customClass="FeedImageCell" customModule="EssentialFeedIOS" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="84" width="393" height="580"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="ImageCommentCell" rowHeight="116" id="DH7-Sa-IpY" customClass="ImageCommentCell" customModule="EssentialFeedIOS" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="84" width="393" height="116"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="DH7-Sa-IpY" id="W4f-A2-OOF">
-                                    <rect key="frame" x="0.0" y="0.0" width="393" height="580"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="393" height="116"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="LGp-af-V53">
+                                            <rect key="frame" x="20" y="11" width="353" height="94"/>
+                                            <subviews>
+                                                <stackView opaque="NO" contentMode="scaleToFill" spacing="62" translatesAutoresizingMaskIntoConstraints="NO" id="EKd-J9-x62">
+                                                    <rect key="frame" x="0.0" y="0.0" width="353" height="20.333333333333332"/>
+                                                    <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="Username" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mcj-DW-TQK">
+                                                            <rect key="frame" x="0.0" y="0.0" width="83.666666666666671" height="20.333333333333332"/>
+                                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="Date" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lQz-F0-JP7">
+                                                            <rect key="frame" x="145.66666666666663" y="0.0" width="207.33333333333337" height="20.333333333333332"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <color key="textColor" systemColor="secondaryLabelColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                    </subviews>
+                                                </stackView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Comment comment comment comment" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ytj-3L-Wsf">
+                                                    <rect key="frame" x="0.0" y="28.333333333333336" width="303.66666666666669" height="65.666666666666657"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="EKd-J9-x62" firstAttribute="leading" secondItem="LGp-af-V53" secondAttribute="leading" id="2Pv-Pl-b6W"/>
+                                                <constraint firstAttribute="trailing" secondItem="EKd-J9-x62" secondAttribute="trailing" id="aFG-Kd-Z6w"/>
+                                            </constraints>
+                                        </stackView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="LGp-af-V53" firstAttribute="leading" secondItem="W4f-A2-OOF" secondAttribute="leadingMargin" id="Mk2-tp-whW"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="LGp-af-V53" secondAttribute="trailing" id="UMO-Qc-uuz"/>
+                                        <constraint firstItem="LGp-af-V53" firstAttribute="top" secondItem="W4f-A2-OOF" secondAttribute="topMargin" id="V2U-5U-0zO"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="LGp-af-V53" secondAttribute="bottom" id="ij7-nt-vbd"/>
+                                    </constraints>
                                 </tableViewCellContentView>
                                 <accessibility key="accessibilityConfiguration" identifier="feed-image-cell"/>
+                                <connections>
+                                    <outlet property="dateLabel" destination="lQz-F0-JP7" id="oCZ-HN-QqI"/>
+                                    <outlet property="messageLabel" destination="Ytj-3L-Wsf" id="cxn-72-JO4"/>
+                                    <outlet property="usernameLabel" destination="mcj-DW-TQK" id="0cD-Ud-C1H"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -81,10 +126,13 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="1105.7971014492755" y="-11.383928571428571"/>
+            <point key="canvasLocation" x="1104.5801526717557" y="-11.971830985915494"/>
         </scene>
     </scenes>
     <resources>
+        <systemColor name="secondaryLabelColor">
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

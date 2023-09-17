@@ -38,6 +38,7 @@
 		789197782AB78BDA008A44DA /* ImageCommentsSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789197772AB78BDA008A44DA /* ImageCommentsSnapshotTest.swift */; };
 		7891977B2AB78E44008A44DA /* ImageCommentsCellController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7891977A2AB78E44008A44DA /* ImageCommentsCellController.swift */; };
 		7891977F2AB78FF9008A44DA /* ImageComments.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7891977E2AB78FF9008A44DA /* ImageComments.storyboard */; };
+		789197832AB79368008A44DA /* ImageCommentsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789197822AB79368008A44DA /* ImageCommentsCell.swift */; };
 		78928AAF2A397303006B10FE /* EssentialFeeds.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 787D83B829DE876D002C6B90 /* EssentialFeeds.framework */; platformFilter = ios; };
 		78928AB02A397303006B10FE /* EssentialFeeds.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 787D83B829DE876D002C6B90 /* EssentialFeeds.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		78928AB42A3974FF006B10FE /* XCTestCaseMemoryLeakTrackingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787D83E229F0F403002C6B90 /* XCTestCaseMemoryLeakTrackingHelper.swift */; };
@@ -203,6 +204,7 @@
 		789197772AB78BDA008A44DA /* ImageCommentsSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsSnapshotTest.swift; sourceTree = "<group>"; };
 		7891977A2AB78E44008A44DA /* ImageCommentsCellController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsCellController.swift; sourceTree = "<group>"; };
 		7891977E2AB78FF9008A44DA /* ImageComments.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ImageComments.storyboard; sourceTree = "<group>"; };
+		789197822AB79368008A44DA /* ImageCommentsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsCell.swift; sourceTree = "<group>"; };
 		78928AB52A398A00006B10FE /* ListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
 		78928AB92A3C1787006B10FE /* FeedImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageCell.swift; sourceTree = "<group>"; };
 		78928ABB2A4001F2006B10FE /* UIView+Shimmering.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Shimmering.swift"; sourceTree = "<group>"; };
@@ -459,7 +461,6 @@
 				789197792AB78E24008A44DA /* Image Comments UI */,
 				789395142A78D4F1009F0024 /* Feed Presentation */,
 				78928AC02A491873006B10FE /* FeedUI */,
-				78928ABD2A491829006B10FE /* Feed Image Data Loader */,
 				788BEA082A351C28000050BB /* EssentialFeedIOS.h */,
 			);
 			path = EssentialFeedIOS;
@@ -574,6 +575,7 @@
 		7891977D2AB78FE1008A44DA /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				789197822AB79368008A44DA /* ImageCommentsCell.swift */,
 				7891977E2AB78FF9008A44DA /* ImageComments.storyboard */,
 			);
 			path = Views;
@@ -586,18 +588,10 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		78928ABD2A491829006B10FE /* Feed Image Data Loader */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "Feed Image Data Loader";
-			sourceTree = "<group>";
-		};
 		78928AC02A491873006B10FE /* FeedUI */ = {
 			isa = PBXGroup;
 			children = (
 				7891976C2AB78213008A44DA /* SharedUI */,
-				78928AC72A493E58006B10FE /* Composer */,
 				78928AC22A49188E006B10FE /* Views */,
 				78928AC12A49187F006B10FE /* Controllers */,
 			);
@@ -621,13 +615,6 @@
 				789394F12A6BC5B8009F0024 /* Feed.xcassets */,
 			);
 			path = Views;
-			sourceTree = "<group>";
-		};
-		78928AC72A493E58006B10FE /* Composer */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Composer;
 			sourceTree = "<group>";
 		};
 		7893950C2A78BFC8009F0024 /* Feed Presentation */ = {
@@ -1196,6 +1183,7 @@
 				78928ABC2A4001F2006B10FE /* UIView+Shimmering.swift in Sources */,
 				78928AB62A398A00006B10FE /* ListViewController.swift in Sources */,
 				78928ABA2A3C1787006B10FE /* FeedImageCell.swift in Sources */,
+				789197832AB79368008A44DA /* ImageCommentsCell.swift in Sources */,
 				7891977B2AB78E44008A44DA /* ImageCommentsCellController.swift in Sources */,
 				789395182A78D5A2009F0024 /* UIRefreshControl+Helpers.swift in Sources */,
 				78982DF32AAE340C005BDAF6 /* UITableView+HeaderSizing.swift in Sources */,

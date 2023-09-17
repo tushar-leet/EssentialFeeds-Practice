@@ -14,14 +14,14 @@ public protocol FeedImageCellControllerDelegate {
  }
 
 
-public final class FeedImageCellController:FeedImageView,ResourceView,ResourceLoadingView,ResourceErrorView{
+public final class FeedImageCellController:ResourceView,ResourceLoadingView,ResourceErrorView{
    
     public typealias ResourceViewModel = UIImage
-    private let viewModel:FeedImageViewModel<UIImage>
+    private let viewModel:FeedImageViewModel
     private let delegate: FeedImageCellControllerDelegate
     private  var cell: FeedImageCell?
     
-    public init(viewModel:FeedImageViewModel<UIImage>,delegate: FeedImageCellControllerDelegate) {
+    public init(viewModel:FeedImageViewModel,delegate: FeedImageCellControllerDelegate) {
              self.delegate = delegate
              self.viewModel = viewModel
          }
@@ -29,14 +29,15 @@ public final class FeedImageCellController:FeedImageView,ResourceView,ResourceLo
     func view(in tableView:UITableView) -> UITableViewCell {
         cell = tableView.dequeueReusableCell()
         cell?.locationContainer.isHidden = !viewModel.hasLocation
-        cell?.descriptionLabel.text = viewModel.description
         cell?.locationLabel.text = viewModel.location
+        cell?.descriptionLabel.text = viewModel.description
+        cell?.feedImageView.image = nil
         cell?.onRetry = delegate.didRequestImage
         delegate.didRequestImage()
         return cell!
     }
     
-    public func display(_ viewModel: FeedImageViewModel<UIImage>) {}
+    public func display(_ viewModel: FeedImageViewModel) {}
     
     func preload(){
         delegate.didRequestImage()
@@ -55,7 +56,7 @@ public final class FeedImageCellController:FeedImageView,ResourceView,ResourceLo
         cell?.feedImageView.setImageAnimated(viewModel)
     }
     
-    public func display(_ isLoading: EssentialFeeds.ResourceLoadingViewModel) {
+    public func display(_ viewModel: EssentialFeeds.ResourceLoadingViewModel) {
         cell?.feedImageContainer.isShimmering = viewModel.isLoading
     }
     

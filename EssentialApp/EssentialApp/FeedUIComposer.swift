@@ -13,7 +13,7 @@ import EssentialFeedIOS
 public final class FeedUIComposer {
      private init() {}
 
-    public static func feedComposedWith(feedLoader: @escaping () -> FeedLoader.Publisher, imageLoader:  @escaping (URL) -> FeedImageDataLoader.Publisher) -> FeedViewController {
+    public static func feedComposedWith(feedLoader: @escaping () -> AnyPublisher<[FeedImage], Error>, imageLoader:  @escaping (URL) -> FeedImageDataLoader.Publisher) -> FeedViewController {
          
         let presentationAdapter = LoadResourcePresentationAdapter<[FeedImage],FeedViewAdapter>(loader: feedLoader)
          let feedController = FeedViewController.makeWith(
@@ -76,7 +76,7 @@ private final class FeedViewAdapter:ResourceView{
             let adapter = LoadResourcePresentationAdapter<Data,WeakRefVirtualProxy<FeedImageCellController>>(loader:{ [loader] in
                 loader(model.url)
             })
-            let view = FeedImageCellController(viewModel:FeedImagePresenter<FeedImageCellController,UIImage>.map(model),delegate: adapter)
+            let view = FeedImageCellController(viewModel:FeedImagePresenter.map(model),delegate: adapter)
             
             adapter.presenter = LoadResourcePresenter(errorView: WeakRefVirtualProxy(object: view),
                                                       loadingView: WeakRefVirtualProxy(object: view),
@@ -142,6 +142,7 @@ extension LoadResourcePresentationAdapter: FeedImageCellControllerDelegate {
      }
  }
 
+/*
 private final class FeedImageDataLoaderPresentationAdapter<View: FeedImageView, Image>: FeedImageCellControllerDelegate where View.Image == Image {
     private let model: FeedImage
     private let imageLoader: (URL) -> FeedImageDataLoader.Publisher
@@ -178,3 +179,4 @@ private final class FeedImageDataLoaderPresentationAdapter<View: FeedImageView, 
         cancellable?.cancel()
     }
 }
+*/

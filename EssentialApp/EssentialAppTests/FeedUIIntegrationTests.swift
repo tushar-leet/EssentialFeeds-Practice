@@ -10,6 +10,7 @@ import UIKit
 import EssentialFeeds
 import EssentialFeedIOS
 import EssentialApp
+import Combine
 
 final class FeedUIIntegrationTests: XCTestCase {
 
@@ -361,16 +362,15 @@ final class FeedUIIntegrationTests: XCTestCase {
         XCTAssertEqual(cell.descriptionText, image.description, "Expected description text to be \(String(describing: image.description)) for image view at index (\(index)", file: file, line: line)
     }
     
-    class LoaderSpy:FeedLoader,FeedImageDataLoader{
+    class LoaderSpy:FeedImageDataLoader{
        
         // MARK: - FeedLoader
-        
-        typealias feedRequests = (FeedLoader.Result) -> Void
-        var completionArray = [feedRequests]()
+
+        private var feedRequests = [PassthroughSubject<[FeedImage], Error>]()
         private var imageRequests = [(url: URL, completion: (FeedImageDataLoader.Result) -> Void)]()
         
         var loadFeedCallCount:Int{
-            completionArray.count
+            feedRequests.count
         }
     
         private(set) var  cancelledImageURLs = [URL]()
@@ -386,17 +386,25 @@ final class FeedUIIntegrationTests: XCTestCase {
             return imageRequests.map { $0.url }
         }
         
-        func load(completion: @escaping feedRequests) {
-            completionArray.append(completion)
+//        func load(completion: @escaping feedRequests) {
+//            completionArray.append(completion)
+//        }
+        
+        func loadPublisher() -> AnyPublisher<[FeedImage], Error> {
+            let publisher = PassthroughSubject<[FeedImage], Error>()
+            feedRequests.append(publisher)
+            return publisher.eraseToAnyPublisher()
         }
         
         func completeFeedLoading(with feed:[FeedImage] = [],_ index:Int = 0){
-            completionArray[index](.success(feed))
+           // completionArray[index](.success(feed))
+            feedRequests[index].send(feed)
         }
         
         func completeFeedLoadingWithError(at index:Int = 0){
             let error = NSError(domain: "a error", code: 0)
-            completionArray[index](.failure(error))
+           // completionArray[index](.failure(error))
+            feedRequests[index].send(completion: .failure(error))
         }
         
         // MARK: - FeedImageDataLoader

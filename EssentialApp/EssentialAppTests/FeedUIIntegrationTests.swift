@@ -317,7 +317,7 @@ final class FeedUIIntegrationTests: XCTestCase {
 
     // MARK: HELPERS
     
-    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (controller:FeedViewController,spy:LoaderSpy){
+    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (controller:ListViewController,spy:LoaderSpy){
         let loader = LoaderSpy()
         let sut = FeedUIComposer.feedComposedWith(feedLoader:loader.loadPublisher,imageLoader:loader.loadImageDataPublisher)
         trackForMemoryLeaks(loader, file: file, line: line)
@@ -333,7 +333,7 @@ final class FeedUIIntegrationTests: XCTestCase {
         return FeedImage(id: UUID(), description: description, location: location, url: url)
     }
     
-    private func assertThat(_ sut: FeedViewController, isRendering feed: [FeedImage],withLoader imageLoader:LoaderSpy? = nil, file: StaticString = #file, line: UInt = #line) {
+    private func assertThat(_ sut: ListViewController, isRendering feed: [FeedImage],withLoader imageLoader:LoaderSpy? = nil, file: StaticString = #file, line: UInt = #line) {
         sut.view.enforceLayoutCycle()
         guard sut.numberOfRenderedFeedImageViews() == feed.count else {
             return XCTFail("Expected \(feed.count) images, got \(sut.numberOfRenderedFeedImageViews()) instead.", file: file, line: line)
@@ -344,7 +344,7 @@ final class FeedUIIntegrationTests: XCTestCase {
         }
     }
 
-    private func assertThat(_ sut: FeedViewController, hasViewConfiguredFor image: FeedImage,withLoader imageLoader:LoaderSpy? = nil, at index: Int, file: StaticString = #file, line: UInt = #line) {
+    private func assertThat(_ sut: ListViewController, hasViewConfiguredFor image: FeedImage,withLoader imageLoader:LoaderSpy? = nil, at index: Int, file: StaticString = #file, line: UInt = #line) {
         let view = sut.feedImageView(at: index)
 
         guard let cell = view as? FeedImageCell else {
@@ -447,7 +447,7 @@ private extension UIButton {
      }
  }
 
-extension FeedViewController{
+extension ListViewController{
     var errorMessage: String? {
         return errorView?.message
     }

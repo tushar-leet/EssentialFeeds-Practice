@@ -421,6 +421,7 @@
 				787D83E229F0F403002C6B90 /* XCTestCaseMemoryLeakTrackingHelper.swift */,
 				78C54DB42A1B6D9700F2C37F /* SharedTestHelpers.swift */,
 				78A5A4A82AB5EF6000AB952A /* SharedLocalizationTestHelpers.swift */,
+				78C54DB22A1B6CBB00F2C37F /* FeedCacheTestHelpers.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -712,7 +713,6 @@
 			isa = PBXGroup;
 			children = (
 				78C54DAE2A14877500F2C37F /* FeedStoreSpy.swift */,
-				78C54DB22A1B6CBB00F2C37F /* FeedCacheTestHelpers.swift */,
 				789CFB842A81EBD30095E031 /* FeedImageDataStoreSpy.swift */,
 			);
 			path = Helpers;

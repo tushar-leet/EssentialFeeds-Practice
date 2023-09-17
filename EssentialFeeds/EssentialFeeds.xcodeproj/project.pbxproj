@@ -33,6 +33,8 @@
 		789197612AB76745008A44DA /* ImageCommentsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789197602AB76745008A44DA /* ImageCommentsPresenter.swift */; };
 		789197672AB7690B008A44DA /* ImageComments.strings in Resources */ = {isa = PBXBuildFile; fileRef = 789197662AB768D1008A44DA /* ImageComments.strings */; };
 		7891976B2AB76A39008A44DA /* ImageCommentsLocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7891976A2AB76A39008A44DA /* ImageCommentsLocalizationTests.swift */; };
+		789197722AB783B8008A44DA /* ListSanpshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789197712AB783B8008A44DA /* ListSanpshotTests.swift */; };
+		789197742AB786D2008A44DA /* SnapshotTest+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789197732AB786D2008A44DA /* SnapshotTest+Helper.swift */; };
 		78928AAF2A397303006B10FE /* EssentialFeeds.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 787D83B829DE876D002C6B90 /* EssentialFeeds.framework */; platformFilter = ios; };
 		78928AB02A397303006B10FE /* EssentialFeeds.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 787D83B829DE876D002C6B90 /* EssentialFeeds.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		78928AB42A3974FF006B10FE /* XCTestCaseMemoryLeakTrackingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787D83E229F0F403002C6B90 /* XCTestCaseMemoryLeakTrackingHelper.swift */; };
@@ -193,6 +195,8 @@
 		789197682AB7692E008A44DA /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/ImageComments.strings; sourceTree = "<group>"; };
 		789197692AB7692F008A44DA /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/ImageComments.strings"; sourceTree = "<group>"; };
 		7891976A2AB76A39008A44DA /* ImageCommentsLocalizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCommentsLocalizationTests.swift; sourceTree = "<group>"; };
+		789197712AB783B8008A44DA /* ListSanpshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListSanpshotTests.swift; sourceTree = "<group>"; };
+		789197732AB786D2008A44DA /* SnapshotTest+Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SnapshotTest+Helper.swift"; sourceTree = "<group>"; };
 		78928AB52A398A00006B10FE /* ListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
 		78928AB92A3C1787006B10FE /* FeedImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageCell.swift; sourceTree = "<group>"; };
 		78928ABB2A4001F2006B10FE /* UIView+Shimmering.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Shimmering.swift"; sourceTree = "<group>"; };
@@ -438,6 +442,7 @@
 			isa = PBXGroup;
 			children = (
 				78873E7F2AAE2B2200E7A554 /* UIImage+TestHelpers.swift */,
+				789197732AB786D2008A44DA /* SnapshotTest+Helper.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -456,6 +461,7 @@
 		788BEA112A351C2A000050BB /* EssentialFeedIOSTests */ = {
 			isa = PBXGroup;
 			children = (
+				789197702AB782FE008A44DA /* SharedUI */,
 				78873E7E2AAE2AAC00E7A554 /* Helpers */,
 				78873E7C2AAE10AD00E7A554 /* FeedSnapshotTest.swift */,
 			);
@@ -514,6 +520,22 @@
 				78982DF22AAE340C005BDAF6 /* UITableView+HeaderSizing.swift */,
 			);
 			path = Helpers;
+			sourceTree = "<group>";
+		};
+		789197702AB782FE008A44DA /* SharedUI */ = {
+			isa = PBXGroup;
+			children = (
+				789197752AB787FB008A44DA /* snapshots */,
+				789197712AB783B8008A44DA /* ListSanpshotTests.swift */,
+			);
+			path = SharedUI;
+			sourceTree = "<group>";
+		};
+		789197752AB787FB008A44DA /* snapshots */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = snapshots;
 			sourceTree = "<group>";
 		};
 		78928AAE2A397303006B10FE /* Frameworks */ = {
@@ -1147,6 +1169,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				78928AB42A3974FF006B10FE /* XCTestCaseMemoryLeakTrackingHelper.swift in Sources */,
+				789197722AB783B8008A44DA /* ListSanpshotTests.swift in Sources */,
+				789197742AB786D2008A44DA /* SnapshotTest+Helper.swift in Sources */,
 				78873E7D2AAE10AD00E7A554 /* FeedSnapshotTest.swift in Sources */,
 				78873E802AAE2B2200E7A554 /* UIImage+TestHelpers.swift in Sources */,
 			);

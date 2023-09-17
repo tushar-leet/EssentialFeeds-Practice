@@ -9,8 +9,8 @@ import Foundation
 import Combine
 import EssentialFeeds
 
-public extension FeedLoader{
-    typealias Publisher = AnyPublisher<[FeedImage],Swift.Error>
+public extension LocalFeedLoader{
+    typealias Publisher = AnyPublisher<[FeedImage],Error>
     func loadPublisher() -> Publisher{
         return Deferred{
             Future(self.load)

@@ -7,12 +7,14 @@
 
 import Foundation
 
-public protocol FeedImageView {
-    associatedtype Image
-    func display(_ model: FeedImageViewModel<Image>)
-}
+//public protocol FeedImageView {
+//    associatedtype Image
+//    func display(_ model: FeedImageViewModel<Image>)
+//}
 
-public final class FeedImagePresenter<View: FeedImageView, Image> where View.Image == Image {
+public final class FeedImagePresenter {
+//public final class FeedImagePresenter<View: FeedImageView, Image> where View.Image == Image {
+    /*
    private let view: View
    private let imageTransformer: (Data) -> Image?
    
@@ -48,4 +50,10 @@ public final class FeedImagePresenter<View: FeedImageView, Image> where View.Ima
            isLoading: false,
            shouldRetry: true))
    }
+    */
+    public static func map(_ image: FeedImage) -> FeedImageViewModel{
+        FeedImageViewModel(
+            description: image.description,
+            location: image.location)
+    }
 }

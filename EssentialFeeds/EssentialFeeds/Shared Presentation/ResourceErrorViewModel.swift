@@ -1,14 +1,14 @@
 //
 //  ResourceErrorViewModel.swift
-//  EssentialFeedIOS
+//  EssentialFeeds
 //
-//  Created by TUSHAR SHARMA on 01/08/23.
+//  Created by TUSHAR SHARMA on 02/08/23.
 //
 
 import Foundation
 
 public struct ResourceErrorViewModel {
-    let message: String?
+    public let message: String?
     
     static var noError: ResourceErrorViewModel {
         return ResourceErrorViewModel(message: nil)
@@ -18,3 +18,4 @@ public struct ResourceErrorViewModel {
         return ResourceErrorViewModel(message: message)
     }
 }
+

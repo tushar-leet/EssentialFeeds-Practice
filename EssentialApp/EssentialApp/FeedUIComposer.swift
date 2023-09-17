@@ -13,13 +13,13 @@ import EssentialFeedIOS
 public final class FeedUIComposer {
      private init() {}
 
-    public static func feedComposedWith(feedLoader: @escaping () -> FeedLoader.Publisher, imageLoader:  @escaping (URL) -> FeedImageDataLoader.Publisher) -> FeedViewController {
+    public static func feedComposedWith(feedLoader: @escaping () -> AnyPublisher<[FeedImage], Error>, imageLoader:  @escaping (URL) -> FeedImageDataLoader.Publisher) -> FeedViewController {
          
-        let presentationAdapter = FeedLoaderPresentationAdapter(feedLoader: feedLoader)
+        let presentationAdapter = LoadResourcePresentationAdapter<[FeedImage],FeedViewAdapter>(loader: feedLoader)
          let feedController = FeedViewController.makeWith(
                       delegate: presentationAdapter,
                       title: FeedPresenter.title)
-         presentationAdapter.presenter = FeedPresenter(errorView: WeakRefVirtualProxy(object: feedController), loadingView: WeakRefVirtualProxy(object: feedController), feedView: FeedViewAdapter(controller: feedController,loader: imageLoader))
+        presentationAdapter.presenter = LoadResourcePresenter(errorView: WeakRefVirtualProxy(object: feedController), loadingView: WeakRefVirtualProxy(object: feedController), resourceView: FeedViewAdapter(controller: feedController,loader: imageLoader), mapper: FeedPresenter.map)
          return feedController
      }
  }
@@ -43,25 +43,25 @@ private final class WeakRefVirtualProxy<T:AnyObject>{
     }
 }
 
-extension WeakRefVirtualProxy:FeedLoadingView where T:FeedLoadingView{
-    func display(_ viewModel: FeedLoadingViewModel) {
+extension WeakRefVirtualProxy:ResourceLoadingView where T:ResourceLoadingView{
+    func display(_ viewModel: ResourceLoadingViewModel) {
         object?.display(viewModel)
     }
 }
 
-extension WeakRefVirtualProxy: FeedImageView where T: FeedImageView, T.Image == UIImage {
-     func display(_ model: FeedImageViewModel<UIImage>) {
+extension WeakRefVirtualProxy: ResourceView where T: ResourceView, T.ResourceViewModel == UIImage {
+     func display(_ model: UIImage) {
          object?.display(model)
      }
  }
 
-extension WeakRefVirtualProxy: FeedErrorView where T: FeedErrorView {
-    func display(_ viewModel: EssentialFeeds.FeedErrorViewModel) {
+extension WeakRefVirtualProxy: ResourceErrorView where T: ResourceErrorView {
+    func display(_ viewModel: EssentialFeeds.ResourceErrorViewModel) {
         object?.display(viewModel)
     }
  }
 
-private final class FeedViewAdapter:FeedView{
+private final class FeedViewAdapter:ResourceView{
 
     private weak var controller:FeedViewController?
     private let loader: (URL) -> FeedImageDataLoader.Publisher
@@ -73,44 +73,76 @@ private final class FeedViewAdapter:FeedView{
 
     func display(_ viewModel: FeedViewsModel) {
         controller?.display(viewModel.feed.map { model in
-            let adapter = FeedImageDataLoaderPresentationAdapter<WeakRefVirtualProxy<FeedImageCellController>, UIImage>(model: model, imageLoader: self.loader)
-            let view = FeedImageCellController(delegate: adapter)
+            let adapter = LoadResourcePresentationAdapter<Data,WeakRefVirtualProxy<FeedImageCellController>>(loader:{ [loader] in
+                loader(model.url)
+            })
+            let view = FeedImageCellController(viewModel:FeedImagePresenter.map(model),delegate: adapter)
             
-            adapter.presenter = FeedImagePresenter(
-                view: WeakRefVirtualProxy(object: view),
-                imageTransformer: UIImage.init)
+            adapter.presenter = LoadResourcePresenter(errorView: WeakRefVirtualProxy(object: view),
+                                                      loadingView: WeakRefVirtualProxy(object: view),
+                                                      resourceView: WeakRefVirtualProxy(object: view),
+                                                      mapper: UIImage.tryMake)
             
             return view
         })
     }
 }
 
-private final class FeedLoaderPresentationAdapter: FeedViewControllerDelegate {
-     private let feedLoader: () -> FeedLoader.Publisher
-     var presenter: FeedPresenter?
+private final class LoadResourcePresentationAdapter<Resource,View:ResourceView> {
+     private let loader: () ->  AnyPublisher<Resource,Error>
+     var presenter: LoadResourcePresenter<Resource,View>?
     private var cancellable:Cancellable?
 
-    init(feedLoader: @escaping () -> FeedLoader.Publisher) {
-         self.feedLoader = feedLoader
+    init(loader: @escaping () -> AnyPublisher<Resource,Error>) {
+         self.loader = loader
      }
 
-    func didRequestFeedRefresh() {
-         presenter?.didStartLoadingFeed()
+    func loadResource() {
+         presenter?.didStartLoading()
 
-        cancellable = feedLoader()
+        cancellable = loader()
             .dispatchOnMainQueue()
             .sink { [weak self] completion in
             switch completion{
             case .finished: break
             case let .failure(error):
-                self?.presenter?.didFinishLoadingFeed(with: error)
+                self?.presenter?.didFinishLoading(with: error)
             }
         } receiveValue: { [weak self] feed in
-            self?.presenter?.didFinishLoadingFeed(with: feed)
+            self?.presenter?.didFinishLoading(with: feed)
         }
      }
  }
 
+extension UIImage {
+     struct InvalidImageData: Error {}
+
+     static func tryMake(data: Data) throws -> UIImage {
+         guard let image = UIImage(data: data) else {
+             throw InvalidImageData()
+         }
+         return image
+     }
+ }
+
+extension LoadResourcePresentationAdapter:FeedViewControllerDelegate{
+    func didRequestFeedRefresh() {
+        loadResource()
+    }
+}
+
+extension LoadResourcePresentationAdapter: FeedImageCellControllerDelegate {
+     func didRequestImage() {
+         loadResource()
+     }
+
+     func didCancelImageRequest() {
+         cancellable?.cancel()
+         cancellable = nil
+     }
+ }
+
+/*
 private final class FeedImageDataLoaderPresentationAdapter<View: FeedImageView, Image>: FeedImageCellControllerDelegate where View.Image == Image {
     private let model: FeedImage
     private let imageLoader: (URL) -> FeedImageDataLoader.Publisher
@@ -147,3 +179,4 @@ private final class FeedImageDataLoaderPresentationAdapter<View: FeedImageView, 
         cancellable?.cancel()
     }
 }
+*/

@@ -17,19 +17,18 @@ public final class FeedUIComposer {
          
         let presentationAdapter = LoadResourcePresentationAdapter<[FeedImage],FeedViewAdapter>(loader: feedLoader)
          let feedController = ListViewController.makeWith(
-                      delegate: presentationAdapter,
                       title: FeedPresenter.title)
+        feedController.onRefresh = presentationAdapter.loadResource
         presentationAdapter.presenter = LoadResourcePresenter(errorView: WeakRefVirtualProxy(object: feedController), loadingView: WeakRefVirtualProxy(object: feedController), resourceView: FeedViewAdapter(controller: feedController,loader: imageLoader), mapper: FeedPresenter.map)
          return feedController
      }
  }
 
 private extension ListViewController {
-     static func makeWith(delegate: FeedViewControllerDelegate, title: String) -> ListViewController {
+     static func makeWith(title: String) -> ListViewController {
          let bundle = Bundle(for: ListViewController.self)
          let storyboard = UIStoryboard(name: "Feed", bundle: bundle)
          let feedController = storyboard.instantiateInitialViewController() as! ListViewController
-         feedController.delegate = delegate
          feedController.title = title
          return feedController
      }
@@ -124,12 +123,6 @@ extension UIImage {
          return image
      }
  }
-
-extension LoadResourcePresentationAdapter:FeedViewControllerDelegate{
-    func didRequestFeedRefresh() {
-        loadResource()
-    }
-}
 
 extension LoadResourcePresentationAdapter: FeedImageCellControllerDelegate {
      func didRequestImage() {

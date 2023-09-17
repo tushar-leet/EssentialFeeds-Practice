@@ -9,10 +9,6 @@ import Foundation
 import UIKit
 import EssentialFeeds
 
-public protocol FeedViewControllerDelegate {
-    func didRequestFeedRefresh()
-}
-
 public protocol CellController{
     func view(in:UITableView) -> UITableViewCell
     func preload()
@@ -21,7 +17,7 @@ public protocol CellController{
 
 public final class ListViewController:UITableViewController,UITableViewDataSourcePrefetching,ResourceLoadingView,ResourceErrorView {
     
-    public var delegate:FeedViewControllerDelegate?
+    public var onRefresh:(()->Void)?
     private var loadingControllers = [IndexPath: CellController]()
     @IBOutlet private(set) public var errorView: ErrorView?
     private var tableModel = [CellController](){
@@ -44,7 +40,7 @@ public final class ListViewController:UITableViewController,UITableViewDataSourc
     }
 
     @IBAction private func refresh() {
-        delegate?.didRequestFeedRefresh()
+        onRefresh?()
     }
     
     public func display(_ viewModel: ResourceLoadingViewModel) {

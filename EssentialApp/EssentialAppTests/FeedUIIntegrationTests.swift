@@ -314,6 +314,20 @@ final class FeedUIIntegrationTests: XCTestCase {
         sut.simulateUserInitatedFeedReload()
         XCTAssertEqual(sut.errorMessage, nil)
     }
+    
+    func test_tapOnErrorView_hidesErrorMessage() {
+        let (sut, loader) = makeSUT()
+        
+        sut.loadViewIfNeeded()
+        
+        XCTAssertEqual(sut.errorMessage, nil)
+        
+        loader.completeFeedLoadingWithError(at: 0)
+        XCTAssertEqual(sut.errorMessage, loadError)
+        
+        sut.simulateErrorViewTap()
+        XCTAssertEqual(sut.errorMessage, nil)
+    }
 
     // MARK: HELPERS
     
@@ -449,7 +463,7 @@ private extension UIButton {
 
 extension ListViewController{
     var errorMessage: String? {
-        return errorView?.message
+        return errorView.message
     }
     
     func simulateUserInitatedFeedReload(){
@@ -466,6 +480,10 @@ extension ListViewController{
     
     func renderedFeedImageData(at index: Int) -> Data? {
         return simulateFeedImageViewVisible(at: index)?.renderedImage
+    }
+    
+    func simulateErrorViewTap(){
+        errorView.simulateTap()
     }
     
     @discardableResult

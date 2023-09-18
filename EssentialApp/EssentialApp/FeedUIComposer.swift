@@ -82,7 +82,7 @@ private final class FeedViewAdapter:ResourceView{
                                                       resourceView: WeakRefVirtualProxy(object: view),
                                                       mapper: UIImage.tryMake)
             
-            return CellController(view)
+            return CellController(id:model,view)
         })
     }
 }

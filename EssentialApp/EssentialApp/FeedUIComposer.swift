@@ -13,23 +13,22 @@ import EssentialFeedIOS
 public final class FeedUIComposer {
      private init() {}
 
-    public static func feedComposedWith(feedLoader: @escaping () -> AnyPublisher<[FeedImage], Error>, imageLoader:  @escaping (URL) -> FeedImageDataLoader.Publisher) -> FeedViewController {
+    public static func feedComposedWith(feedLoader: @escaping () -> AnyPublisher<[FeedImage], Error>, imageLoader:  @escaping (URL) -> FeedImageDataLoader.Publisher) -> ListViewController {
          
         let presentationAdapter = LoadResourcePresentationAdapter<[FeedImage],FeedViewAdapter>(loader: feedLoader)
-         let feedController = FeedViewController.makeWith(
-                      delegate: presentationAdapter,
+         let feedController = ListViewController.makeWith(
                       title: FeedPresenter.title)
+        feedController.onRefresh = presentationAdapter.loadResource
         presentationAdapter.presenter = LoadResourcePresenter(errorView: WeakRefVirtualProxy(object: feedController), loadingView: WeakRefVirtualProxy(object: feedController), resourceView: FeedViewAdapter(controller: feedController,loader: imageLoader), mapper: FeedPresenter.map)
          return feedController
      }
  }
 
-private extension FeedViewController {
-     static func makeWith(delegate: FeedViewControllerDelegate, title: String) -> FeedViewController {
-         let bundle = Bundle(for: FeedViewController.self)
+private extension ListViewController {
+     static func makeWith(title: String) -> ListViewController {
+         let bundle = Bundle(for: ListViewController.self)
          let storyboard = UIStoryboard(name: "Feed", bundle: bundle)
-         let feedController = storyboard.instantiateInitialViewController() as! FeedViewController
-         feedController.delegate = delegate
+         let feedController = storyboard.instantiateInitialViewController() as! ListViewController
          feedController.title = title
          return feedController
      }
@@ -63,10 +62,10 @@ extension WeakRefVirtualProxy: ResourceErrorView where T: ResourceErrorView {
 
 private final class FeedViewAdapter:ResourceView{
 
-    private weak var controller:FeedViewController?
+    private weak var controller:ListViewController?
     private let loader: (URL) -> FeedImageDataLoader.Publisher
     
-    init(controller: FeedViewController, loader: @escaping (URL) -> FeedImageDataLoader.Publisher) {
+    init(controller: ListViewController, loader: @escaping (URL) -> FeedImageDataLoader.Publisher) {
         self.controller = controller
         self.loader = loader
     }
@@ -83,7 +82,7 @@ private final class FeedViewAdapter:ResourceView{
                                                       resourceView: WeakRefVirtualProxy(object: view),
                                                       mapper: UIImage.tryMake)
             
-            return view
+            return CellController(id:model,view)
         })
     }
 }
@@ -124,12 +123,6 @@ extension UIImage {
          return image
      }
  }
-
-extension LoadResourcePresentationAdapter:FeedViewControllerDelegate{
-    func didRequestFeedRefresh() {
-        loadResource()
-    }
-}
 
 extension LoadResourcePresentationAdapter: FeedImageCellControllerDelegate {
      func didRequestImage() {

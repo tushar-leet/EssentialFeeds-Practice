@@ -314,10 +314,24 @@ final class FeedUIIntegrationTests: XCTestCase {
         sut.simulateUserInitatedFeedReload()
         XCTAssertEqual(sut.errorMessage, nil)
     }
+    
+    func test_tapOnErrorView_hidesErrorMessage() {
+        let (sut, loader) = makeSUT()
+        
+        sut.loadViewIfNeeded()
+        
+        XCTAssertEqual(sut.errorMessage, nil)
+        
+        loader.completeFeedLoadingWithError(at: 0)
+        XCTAssertEqual(sut.errorMessage, loadError)
+        
+        sut.simulateErrorViewTap()
+        XCTAssertEqual(sut.errorMessage, nil)
+    }
 
     // MARK: HELPERS
     
-    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (controller:FeedViewController,spy:LoaderSpy){
+    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (controller:ListViewController,spy:LoaderSpy){
         let loader = LoaderSpy()
         let sut = FeedUIComposer.feedComposedWith(feedLoader:loader.loadPublisher,imageLoader:loader.loadImageDataPublisher)
         trackForMemoryLeaks(loader, file: file, line: line)
@@ -333,7 +347,7 @@ final class FeedUIIntegrationTests: XCTestCase {
         return FeedImage(id: UUID(), description: description, location: location, url: url)
     }
     
-    private func assertThat(_ sut: FeedViewController, isRendering feed: [FeedImage],withLoader imageLoader:LoaderSpy? = nil, file: StaticString = #file, line: UInt = #line) {
+    private func assertThat(_ sut: ListViewController, isRendering feed: [FeedImage],withLoader imageLoader:LoaderSpy? = nil, file: StaticString = #file, line: UInt = #line) {
         sut.view.enforceLayoutCycle()
         guard sut.numberOfRenderedFeedImageViews() == feed.count else {
             return XCTFail("Expected \(feed.count) images, got \(sut.numberOfRenderedFeedImageViews()) instead.", file: file, line: line)
@@ -344,7 +358,7 @@ final class FeedUIIntegrationTests: XCTestCase {
         }
     }
 
-    private func assertThat(_ sut: FeedViewController, hasViewConfiguredFor image: FeedImage,withLoader imageLoader:LoaderSpy? = nil, at index: Int, file: StaticString = #file, line: UInt = #line) {
+    private func assertThat(_ sut: ListViewController, hasViewConfiguredFor image: FeedImage,withLoader imageLoader:LoaderSpy? = nil, at index: Int, file: StaticString = #file, line: UInt = #line) {
         let view = sut.feedImageView(at: index)
 
         guard let cell = view as? FeedImageCell else {
@@ -447,9 +461,9 @@ private extension UIButton {
      }
  }
 
-extension FeedViewController{
+extension ListViewController{
     var errorMessage: String? {
-        return errorView?.message
+        return errorView.message
     }
     
     func simulateUserInitatedFeedReload(){
@@ -461,11 +475,16 @@ extension FeedViewController{
     }
     
     func numberOfRenderedFeedImageViews() -> Int{
-        tableView.numberOfRows(inSection:feedImageSection)
+        tableView.numberOfSections == 0 ? 0 : tableView.numberOfRows(inSection:feedImageSection)
+        
     }
     
     func renderedFeedImageData(at index: Int) -> Data? {
         return simulateFeedImageViewVisible(at: index)?.renderedImage
+    }
+    
+    func simulateErrorViewTap(){
+        errorView.simulateTap()
     }
     
     @discardableResult

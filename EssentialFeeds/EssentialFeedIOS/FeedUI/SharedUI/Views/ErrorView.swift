@@ -51,7 +51,8 @@ public final class ErrorView: UIButton {
         titleLabel?.textColor = .white
         titleLabel?.textAlignment = .center
         titleLabel?.numberOfLines = 0
-        titleLabel?.font = .systemFont(ofSize: 12)
+        titleLabel?.font = .preferredFont(forTextStyle: .body)
+        titleLabel?.adjustsFontForContentSizeCategory = true
         titleLabel?.translatesAutoresizingMaskIntoConstraints = false
     }
     

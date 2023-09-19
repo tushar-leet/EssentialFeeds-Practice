@@ -12,7 +12,7 @@ import EssentialFeedIOS
 import EssentialApp
 import Combine
 
-final class FeedUIIntegrationTests: XCTestCase {
+ class FeedUIIntegrationTests: XCTestCase {
 
     func test_feedView_hasTitle() {
         let (sut, _) = makeSUT()
@@ -347,7 +347,7 @@ final class FeedUIIntegrationTests: XCTestCase {
         return FeedImage(id: UUID(), description: description, location: location, url: url)
     }
     
-    private func assertThat(_ sut: ListViewController, isRendering feed: [FeedImage],withLoader imageLoader:LoaderSpy? = nil, file: StaticString = #file, line: UInt = #line) {
+    func assertThat(_ sut: ListViewController, isRendering feed: [FeedImage],withLoader imageLoader:LoaderSpy? = nil, file: StaticString = #file, line: UInt = #line) {
         sut.view.enforceLayoutCycle()
         guard sut.numberOfRenderedFeedImageViews() == feed.count else {
             return XCTFail("Expected \(feed.count) images, got \(sut.numberOfRenderedFeedImageViews()) instead.", file: file, line: line)
@@ -358,7 +358,7 @@ final class FeedUIIntegrationTests: XCTestCase {
         }
     }
 
-    private func assertThat(_ sut: ListViewController, hasViewConfiguredFor image: FeedImage,withLoader imageLoader:LoaderSpy? = nil, at index: Int, file: StaticString = #file, line: UInt = #line) {
+     func assertThat(_ sut: ListViewController, hasViewConfiguredFor image: FeedImage,withLoader imageLoader:LoaderSpy? = nil, at index: Int, file: StaticString = #file, line: UInt = #line) {
         let view = sut.feedImageView(at: index)
 
         guard let cell = view as? FeedImageCell else {
@@ -374,70 +374,6 @@ final class FeedUIIntegrationTests: XCTestCase {
         XCTAssertEqual(cell.locationText, image.location, "Expected location text to be \(String(describing: image.location)) for image  view at index (\(index))", file: file, line: line)
         
         XCTAssertEqual(cell.descriptionText, image.description, "Expected description text to be \(String(describing: image.description)) for image view at index (\(index)", file: file, line: line)
-    }
-    
-    class LoaderSpy:FeedImageDataLoader{
-       
-        // MARK: - FeedLoader
-
-        private var feedRequests = [PassthroughSubject<[FeedImage], Error>]()
-        private var imageRequests = [(url: URL, completion: (FeedImageDataLoader.Result) -> Void)]()
-        
-        var loadFeedCallCount:Int{
-            feedRequests.count
-        }
-    
-        private(set) var  cancelledImageURLs = [URL]()
-        
-        private struct TaskSpy:FeedImageDataLoaderTask{
-            let cancelCallBack:()->()
-            func cancel() {
-                cancelCallBack()
-            }
-        }
-           
-        var loadedImageURLs: [URL] {
-            return imageRequests.map { $0.url }
-        }
-        
-//        func load(completion: @escaping feedRequests) {
-//            completionArray.append(completion)
-//        }
-        
-        func loadPublisher() -> AnyPublisher<[FeedImage], Error> {
-            let publisher = PassthroughSubject<[FeedImage], Error>()
-            feedRequests.append(publisher)
-            return publisher.eraseToAnyPublisher()
-        }
-        
-        func completeFeedLoading(with feed:[FeedImage] = [],_ index:Int = 0){
-           // completionArray[index](.success(feed))
-            feedRequests[index].send(feed)
-        }
-        
-        func completeFeedLoadingWithError(at index:Int = 0){
-            let error = NSError(domain: "a error", code: 0)
-           // completionArray[index](.failure(error))
-            feedRequests[index].send(completion: .failure(error))
-        }
-        
-        // MARK: - FeedImageDataLoader
-        
-        func loadImageData(from url: URL,completion: @escaping (FeedImageDataLoader.Result) -> Void) -> FeedImageDataLoaderTask {
-            imageRequests.append((url, completion))
-            return TaskSpy { [weak self] in
-                self?.cancelledImageURLs.append(url)
-            }
-        }
-
-        func completeImageLoading(with imageData:Data = Data(), at index:Int = 0){
-            imageRequests[index].completion(.success(imageData))
-        }
-        
-        func completeImageLoadingWithError(at index:Int = 0){
-            let error = NSError(domain: "an error", code: 0)
-            imageRequests[index].completion(.failure(error))
-        }
     }
 }
 
@@ -531,7 +467,7 @@ extension ListViewController{
     }
 }
 
-private extension FeedImageCell{
+ extension FeedImageCell{
     var isShowingLocation:Bool{
         !locationContainer.isHidden
     }
@@ -573,3 +509,67 @@ extension UIImage {
          return img!
      }
  }
+
+class LoaderSpy:FeedImageDataLoader{
+   
+    // MARK: - FeedLoader
+
+    private var feedRequests = [PassthroughSubject<[FeedImage], Error>]()
+    private var imageRequests = [(url: URL, completion: (FeedImageDataLoader.Result) -> Void)]()
+    
+    var loadFeedCallCount:Int{
+        feedRequests.count
+    }
+
+    private(set) var  cancelledImageURLs = [URL]()
+    
+    private struct TaskSpy:FeedImageDataLoaderTask{
+        let cancelCallBack:()->()
+        func cancel() {
+            cancelCallBack()
+        }
+    }
+       
+    var loadedImageURLs: [URL] {
+        return imageRequests.map { $0.url }
+    }
+    
+//        func load(completion: @escaping feedRequests) {
+//            completionArray.append(completion)
+//        }
+    
+    func loadPublisher() -> AnyPublisher<[FeedImage], Error> {
+        let publisher = PassthroughSubject<[FeedImage], Error>()
+        feedRequests.append(publisher)
+        return publisher.eraseToAnyPublisher()
+    }
+    
+    func completeFeedLoading(with feed:[FeedImage] = [],_ index:Int = 0){
+       // completionArray[index](.success(feed))
+        feedRequests[index].send(feed)
+    }
+    
+    func completeFeedLoadingWithError(at index:Int = 0){
+        let error = NSError(domain: "a error", code: 0)
+       // completionArray[index](.failure(error))
+        feedRequests[index].send(completion: .failure(error))
+    }
+    
+    // MARK: - FeedImageDataLoader
+    
+    func loadImageData(from url: URL,completion: @escaping (FeedImageDataLoader.Result) -> Void) -> FeedImageDataLoaderTask {
+        imageRequests.append((url, completion))
+        return TaskSpy { [weak self] in
+            self?.cancelledImageURLs.append(url)
+        }
+    }
+
+    func completeImageLoading(with imageData:Data = Data(), at index:Int = 0){
+        imageRequests[index].completion(.success(imageData))
+    }
+    
+    func completeImageLoadingWithError(at index:Int = 0){
+        let error = NSError(domain: "an error", code: 0)
+        imageRequests[index].completion(.failure(error))
+    }
+}

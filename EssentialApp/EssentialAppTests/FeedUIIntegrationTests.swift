@@ -29,10 +29,10 @@ import Combine
         sut.loadViewIfNeeded()
         XCTAssertEqual(loader.loadFeedCallCount, 1,"Expected a loading request once view is loaded")
 
-        sut.simulateUserInitatedFeedReload()
+        sut.simulateUserInitatedReload()
         XCTAssertEqual(loader.loadFeedCallCount, 2,"Expected another loading request once user initiates a reload")
         
-        sut.simulateUserInitatedFeedReload()
+        sut.simulateUserInitatedReload()
         XCTAssertEqual(loader.loadFeedCallCount, 3,"Expected yet another loading request once user initiates another reload")
     }
     
@@ -45,7 +45,7 @@ import Combine
         loader.completeFeedLoading(0)
         XCTAssertFalse(sut.isShowingLoadingIndicator,"Expected no loading indicator once load completes successfully")
    
-        sut.simulateUserInitatedFeedReload()
+        sut.simulateUserInitatedReload()
         XCTAssertTrue(sut.isShowingLoadingIndicator,"Expected loading indicator once user initiates a reload")
  
         loader.completeFeedLoadingWithError(at: 1)
@@ -70,7 +70,7 @@ import Combine
         XCTAssertNotNil(view)
         assertThat(sut, hasViewConfiguredFor: image0, at: 0)
         
-        sut.simulateUserInitatedFeedReload()
+        sut.simulateUserInitatedReload()
         loader.completeFeedLoading(with: [image0,image1,image2,image3],1)
         assertThat(sut, isRendering: [image0,image1,image2,image3], withLoader: loader)
     }
@@ -83,7 +83,7 @@ import Combine
         loader.completeFeedLoading(with: [image0],0)
         assertThat(sut, isRendering: [image0], withLoader: loader)
         
-        sut.simulateUserInitatedFeedReload()
+        sut.simulateUserInitatedReload()
         loader.completeFeedLoadingWithError(at: 1)
         assertThat(sut, isRendering: [image0], withLoader: loader)
     }
@@ -97,7 +97,7 @@ import Combine
         loader.completeFeedLoading(with: [image0, image1],0)
         assertThat(sut, isRendering: [image0, image1])
         
-        sut.simulateUserInitatedFeedReload()
+        sut.simulateUserInitatedReload()
         loader.completeFeedLoading(with: [], 1)
         assertThat(sut, isRendering: [])
     }
@@ -311,7 +311,7 @@ import Combine
         
         loader.completeFeedLoadingWithError(at: 0)
         XCTAssertEqual(sut.errorMessage, loadError)
-        sut.simulateUserInitatedFeedReload()
+        sut.simulateUserInitatedReload()
         XCTAssertEqual(sut.errorMessage, nil)
     }
     
@@ -402,7 +402,7 @@ extension ListViewController{
         return errorView.message
     }
     
-    func simulateUserInitatedFeedReload(){
+    func simulateUserInitatedReload(){
         refreshControl?.simulatePullToRefresh()
     }
     

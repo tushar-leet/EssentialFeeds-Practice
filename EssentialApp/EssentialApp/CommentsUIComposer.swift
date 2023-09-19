@@ -17,7 +17,7 @@ public final class CommentsUIComposer {
          
         let presentationAdapter = LoadResourcePresentationAdapter<[FeedImage],FeedViewAdapter>(loader: commentsLoader)
          let feedController = ListViewController.makeWith(
-                      title: FeedPresenter.title)
+                      title: ImageCommentsPresenter.title)
         feedController.onRefresh = presentationAdapter.loadResource
         presentationAdapter.presenter = LoadResourcePresenter(errorView: WeakRefVirtualProxy(object: feedController), loadingView: WeakRefVirtualProxy(object: feedController), resourceView: FeedViewAdapter(controller: feedController,loader: {_ in Empty<Data,Error>().eraseToAnyPublisher()}), mapper: FeedPresenter.map)
          return feedController

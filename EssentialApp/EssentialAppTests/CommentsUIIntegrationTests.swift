@@ -36,19 +36,19 @@ final class CommentsUIIntegrationTests: FeedUIIntegrationTests {
         XCTAssertEqual(loader.loadCommentsCallCount, 3,"Expected yet another loading request once user initiates another reload")
     }
     
-    override func test_loadingFeedIndicator_isVisibleWhileLoadingFeed(){
+    func test_loadingCommentsIndicator_isVisibleWhileLoadingComments(){
         let (sut,loader) = makeSUT()
         sut.loadViewIfNeeded()
         
         XCTAssertTrue(sut.isShowingLoadingIndicator,"Expected loading indicator once view is loaded")
   
-        loader.completeFeedLoading(0)
+        loader.completeCommentsLoading(0)
         XCTAssertFalse(sut.isShowingLoadingIndicator,"Expected no loading indicator once load completes successfully")
    
         sut.simulateUserInitatedReload()
         XCTAssertTrue(sut.isShowingLoadingIndicator,"Expected loading indicator once user initiates a reload")
  
-        loader.completeFeedLoadingWithError(at: 1)
+        loader.completeCommentsLoadingWithError(at: 1)
         XCTAssertFalse(sut.isShowingLoadingIndicator,"Expected no loading indicator once user initiated loading completes with error")
     }
     
@@ -59,7 +59,7 @@ final class CommentsUIIntegrationTests: FeedUIIntegrationTests {
         
         XCTAssertEqual(sut.errorMessage, nil)
         
-        loader.completeFeedLoadingWithError(at: 0)
+        loader.completeCommentsLoadingWithError(at: 0)
         XCTAssertEqual(sut.errorMessage, loadError)
         sut.simulateUserInitatedReload()
         XCTAssertEqual(sut.errorMessage, nil)
@@ -72,7 +72,7 @@ final class CommentsUIIntegrationTests: FeedUIIntegrationTests {
         
         XCTAssertEqual(sut.errorMessage, nil)
         
-        loader.completeFeedLoadingWithError(at: 0)
+        loader.completeCommentsLoadingWithError(at: 0)
         XCTAssertEqual(sut.errorMessage, loadError)
         
         sut.simulateErrorViewTap()
@@ -85,7 +85,7 @@ final class CommentsUIIntegrationTests: FeedUIIntegrationTests {
         
         let exp = expectation(description: "Wait for background queue")
         DispatchQueue.global().async {
-            loader.completeFeedLoading(0)
+            loader.completeCommentsLoading(0)
             exp.fulfill()
         }
         wait(for: [exp], timeout: 1.0)
@@ -372,12 +372,12 @@ final class CommentsUIIntegrationTests: FeedUIIntegrationTests {
             return publisher.eraseToAnyPublisher()
         }
         
-        func completeFeedLoading(with feed:[FeedImage] = [],_ index:Int = 0){
+        func completeCommentsLoading(with feed:[FeedImage] = [],_ index:Int = 0){
            // completionArray[index](.success(feed))
             requests[index].send(feed)
         }
         
-        func completeFeedLoadingWithError(at index:Int = 0){
+        func completeCommentsLoadingWithError(at index:Int = 0){
             let error = NSError(domain: "a error", code: 0)
            // completionArray[index](.failure(error))
             requests[index].send(completion: .failure(error))

@@ -34,7 +34,7 @@ private extension ListViewController {
      }
  }
 
-private final class WeakRefVirtualProxy<T:AnyObject>{
+ final class WeakRefVirtualProxy<T:AnyObject>{
     private weak var object:T?
     
     init(object: T) {
@@ -87,7 +87,7 @@ private final class FeedViewAdapter:ResourceView{
     }
 }
 
-private final class LoadResourcePresentationAdapter<Resource,View:ResourceView> {
+ final class LoadResourcePresentationAdapter<Resource,View:ResourceView> {
      private let loader: () ->  AnyPublisher<Resource,Error>
      var presenter: LoadResourcePresenter<Resource,View>?
     private var cancellable:Cancellable?

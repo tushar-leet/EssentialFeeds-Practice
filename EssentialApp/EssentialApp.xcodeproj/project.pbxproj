@@ -29,6 +29,8 @@
 		78982DF52AB03E45005BDAF6 /* UIView+TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78982DF42AB03E45005BDAF6 /* UIView+TestHelpers.swift */; };
 		789C52B22AB99B8400838AC7 /* CommentsUIIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789C52B12AB99B8400838AC7 /* CommentsUIIntegrationTests.swift */; };
 		789C52B42AB9A37A00838AC7 /* CommentsUIComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789C52B32AB9A37A00838AC7 /* CommentsUIComposer.swift */; };
+		789C52B62AB9ACF900838AC7 /* XCTestCase+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789C52B52AB9ACF900838AC7 /* XCTestCase+Helpers.swift */; };
+		789C52B82AB9AD7B00838AC7 /* FeedUIIntegration+LoaderSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789C52B72AB9AD7B00838AC7 /* FeedUIIntegration+LoaderSpy.swift */; };
 		789CFBBF2A83467E0095E031 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789CFBBE2A83467E0095E031 /* AppDelegate.swift */; };
 		789CFBC12A83467E0095E031 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789CFBC02A83467E0095E031 /* SceneDelegate.swift */; };
 		789CFBC32A83467E0095E031 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789CFBC22A83467E0095E031 /* ViewController.swift */; };
@@ -98,6 +100,8 @@
 		78982DF42AB03E45005BDAF6 /* UIView+TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+TestHelpers.swift"; sourceTree = "<group>"; };
 		789C52B12AB99B8400838AC7 /* CommentsUIIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsUIIntegrationTests.swift; sourceTree = "<group>"; };
 		789C52B32AB9A37A00838AC7 /* CommentsUIComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsUIComposer.swift; sourceTree = "<group>"; };
+		789C52B52AB9ACF900838AC7 /* XCTestCase+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+Helpers.swift"; sourceTree = "<group>"; };
+		789C52B72AB9AD7B00838AC7 /* FeedUIIntegration+LoaderSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FeedUIIntegration+LoaderSpy.swift"; sourceTree = "<group>"; };
 		789CFBBB2A83467E0095E031 /* EssentialApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EssentialApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		789CFBBE2A83467E0095E031 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		789CFBC02A83467E0095E031 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -181,6 +185,8 @@
 				78110B152AA7550A0095FED7 /* HTTPClientStub.swift */,
 				78110B172AA755900095FED7 /* InMemoryFeedStore.swift */,
 				78982DF42AB03E45005BDAF6 /* UIView+TestHelpers.swift */,
+				789C52B52AB9ACF900838AC7 /* XCTestCase+Helpers.swift */,
+				789C52B72AB9AD7B00838AC7 /* FeedUIIntegration+LoaderSpy.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -367,6 +373,7 @@
 			files = (
 				78982DF52AB03E45005BDAF6 /* UIView+TestHelpers.swift in Sources */,
 				7804F1872A84F16500F6AC60 /* SharedTestHelpers.swift in Sources */,
+				789C52B62AB9ACF900838AC7 /* XCTestCase+Helpers.swift in Sources */,
 				789C52B22AB99B8400838AC7 /* CommentsUIIntegrationTests.swift in Sources */,
 				788857392AA1F88E0052B4D3 /* SceneDelegateTest.swift in Sources */,
 				7893DF162AA4AB8200437058 /* FeedAcceptenceTest.swift in Sources */,
@@ -376,6 +383,7 @@
 				78FE02482A85F19200328B03 /* XCTestCase+FeedLoader.swift in Sources */,
 				788857412AA209900052B4D3 /* FeedViewControllerTest+Localization.swift in Sources */,
 				7888573F2AA209740052B4D3 /* FeedUIIntegrationTests.swift in Sources */,
+				789C52B82AB9AD7B00838AC7 /* FeedUIIntegration+LoaderSpy.swift in Sources */,
 				7804F1802A84B2C800F6AC60 /* FeedImageDataLoaderWithFallbackCompositeTests.swift in Sources */,
 				78FE02522A8740E000328B03 /* XCTestCase+FeedImageDataLoader.swift in Sources */,
 				78FE02442A85ECAE00328B03 /* FeedLoaderCacheDecoratorTest.swift in Sources */,

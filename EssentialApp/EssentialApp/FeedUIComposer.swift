@@ -13,13 +13,15 @@ import EssentialFeedIOS
 public final class FeedUIComposer {
      private init() {}
 
-    public static func feedComposedWith(feedLoader: @escaping () -> AnyPublisher<[FeedImage], Error>, imageLoader:  @escaping (URL) -> FeedImageDataLoader.Publisher) -> ListViewController {
+    public static func feedComposedWith(feedLoader: @escaping () -> AnyPublisher<[FeedImage], Error>,
+                                        imageLoader:  @escaping (URL) -> FeedImageDataLoader.Publisher,
+                                        selection: @escaping (FeedImage) -> Void = { _ in }) -> ListViewController {
          
         let presentationAdapter = LoadResourcePresentationAdapter<[FeedImage],FeedViewAdapter>(loader: feedLoader)
          let feedController = ListViewController.makeWith(
                       title: FeedPresenter.title)
         feedController.onRefresh = presentationAdapter.loadResource
-        presentationAdapter.presenter = LoadResourcePresenter(errorView: WeakRefVirtualProxy(object: feedController), loadingView: WeakRefVirtualProxy(object: feedController), resourceView: FeedViewAdapter(controller: feedController,loader: imageLoader), mapper: FeedPresenter.map)
+        presentationAdapter.presenter = LoadResourcePresenter(errorView: WeakRefVirtualProxy(object: feedController), loadingView: WeakRefVirtualProxy(object: feedController), resourceView: FeedViewAdapter(controller: feedController,loader: imageLoader, selection: selection), mapper: FeedPresenter.map)
          return feedController
      }
  }
@@ -34,7 +36,7 @@ private extension ListViewController {
      }
  }
 
-private final class WeakRefVirtualProxy<T:AnyObject>{
+ final class WeakRefVirtualProxy<T:AnyObject>{
     private weak var object:T?
     
     init(object: T) {
@@ -64,10 +66,12 @@ private final class FeedViewAdapter:ResourceView{
 
     private weak var controller:ListViewController?
     private let loader: (URL) -> FeedImageDataLoader.Publisher
+    private let selection: (FeedImage) -> Void
     
-    init(controller: ListViewController, loader: @escaping (URL) -> FeedImageDataLoader.Publisher) {
+    init(controller: ListViewController, loader: @escaping (URL) -> FeedImageDataLoader.Publisher,selection: @escaping (FeedImage) -> Void) {
         self.controller = controller
         self.loader = loader
+        self.selection = selection
     }
 
     func display(_ viewModel: FeedViewsModel) {
@@ -75,7 +79,9 @@ private final class FeedViewAdapter:ResourceView{
             let adapter = LoadResourcePresentationAdapter<Data,WeakRefVirtualProxy<FeedImageCellController>>(loader:{ [loader] in
                 loader(model.url)
             })
-            let view = FeedImageCellController(viewModel:FeedImagePresenter.map(model),delegate: adapter)
+            let view = FeedImageCellController(viewModel:FeedImagePresenter.map(model),delegate: adapter, selection: { [selection] in
+                selection(model)
+            })
             
             adapter.presenter = LoadResourcePresenter(errorView: WeakRefVirtualProxy(object: view),
                                                       loadingView: WeakRefVirtualProxy(object: view),
@@ -87,7 +93,7 @@ private final class FeedViewAdapter:ResourceView{
     }
 }
 
-private final class LoadResourcePresentationAdapter<Resource,View:ResourceView> {
+ final class LoadResourcePresentationAdapter<Resource,View:ResourceView> {
      private let loader: () ->  AnyPublisher<Resource,Error>
      var presenter: LoadResourcePresenter<Resource,View>?
     private var cancellable:Cancellable?

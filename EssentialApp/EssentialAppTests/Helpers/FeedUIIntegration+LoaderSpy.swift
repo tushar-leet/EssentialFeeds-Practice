@@ -23,6 +23,7 @@ class LoaderSpy:FeedImageDataLoader{
      }
 
      private(set) var  cancelledImageURLs = [URL]()
+     private(set) var loadMoreCallCount = 0
      
      private struct TaskSpy:FeedImageDataLoaderTask{
          let cancelCallBack:()->()
@@ -47,7 +48,9 @@ class LoaderSpy:FeedImageDataLoader{
      
      func completeFeedLoading(with feed:[FeedImage] = [],_ index:Int = 0){
         // completionArray[index](.success(feed))
-         feedRequests[index].send(Paginated(items: feed))
+         feedRequests[index].send(Paginated(items: feed,loadMore: { [weak self] _ in
+             self?.loadMoreCallCount += 1
+         }))
      }
      
      func completeFeedLoadingWithError(at index:Int = 0){

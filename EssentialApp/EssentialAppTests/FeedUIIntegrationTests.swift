@@ -55,6 +55,17 @@ class FeedUIIntegrationTests: XCTestCase {
         XCTAssertEqual(loader.loadFeedCallCount, 3,"Expected yet another loading request once user initiates another reload")
     }
     
+    func test_loadMoreActions_requestMoreFromLoader() {
+        let (sut, loader) = makeSUT()
+        sut.loadViewIfNeeded()
+        loader.completeFeedLoading()
+        
+        XCTAssertEqual(loader.loadMoreCallCount, 0, "Expected no requests before until load more action")
+        
+        sut.simulateLoadMoreFeedAction()
+        XCTAssertEqual(loader.loadMoreCallCount, 1, "Expected load more request")
+    }
+
     func test_loadingFeedIndicator_isVisibleWhileLoadingFeed(){
         let (sut,loader) = makeSUT()
         sut.loadViewIfNeeded()
@@ -460,8 +471,36 @@ extension ListViewController{
         ds?.tableView?(tableView, cancelPrefetchingForRowsAt: [index])
     }
     
+    func simulateLoadMoreFeedAction(){
+        guard let cell =  cell(row: 0, section: feedLoadMoreSection) else{
+            return
+        }
+        let delegate = tableView.delegate
+        let loadMoreIndex = IndexPath(row: 0, section: feedLoadMoreSection)
+        delegate?.tableView?(tableView, willDisplay: cell, forRowAt: loadMoreIndex)
+    }
+    
     private var feedImageSection:Int{
         0
+    }
+    
+    private var feedLoadMoreSection:Int{
+        1
+    }
+}
+
+extension ListViewController{
+    func numberOfRows(in section: Int) -> Int {
+        tableView.numberOfSections > section ? tableView.numberOfRows(inSection: section) : 0
+    }
+    
+    func cell(row: Int, section: Int) -> UITableViewCell? {
+        guard numberOfRows(in: section) > row else {
+            return nil
+        }
+        let ds = tableView.dataSource
+        let index = IndexPath(row: row, section: section)
+        return ds?.tableView(tableView, cellForRowAt: index)
     }
 }
 

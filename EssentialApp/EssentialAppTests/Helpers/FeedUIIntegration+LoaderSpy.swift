@@ -15,7 +15,7 @@ class LoaderSpy:FeedImageDataLoader{
     
      // MARK: - FeedLoader
 
-     private var feedRequests = [PassthroughSubject<[FeedImage], Error>]()
+     private var feedRequests = [PassthroughSubject<Paginated<FeedImage>, Error>]()
      private var imageRequests = [(url: URL, completion: (FeedImageDataLoader.Result) -> Void)]()
      
      var loadFeedCallCount:Int{
@@ -39,15 +39,15 @@ class LoaderSpy:FeedImageDataLoader{
  //            completionArray.append(completion)
  //        }
      
-     func loadPublisher() -> AnyPublisher<[FeedImage], Error> {
-         let publisher = PassthroughSubject<[FeedImage], Error>()
+     func loadPublisher() -> AnyPublisher<Paginated<FeedImage>, Error> {
+         let publisher = PassthroughSubject<Paginated<FeedImage>, Error>()
          feedRequests.append(publisher)
          return publisher.eraseToAnyPublisher()
      }
      
      func completeFeedLoading(with feed:[FeedImage] = [],_ index:Int = 0){
         // completionArray[index](.success(feed))
-         feedRequests[index].send(feed)
+         feedRequests[index].send(Paginated(items: feed))
      }
      
      func completeFeedLoadingWithError(at index:Int = 0){

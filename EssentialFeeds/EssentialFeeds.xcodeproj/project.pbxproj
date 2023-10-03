@@ -75,6 +75,8 @@
 		7896C76F2AB436D800461F5A /* RemoteLoaderTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7896C76E2AB436D800461F5A /* RemoteLoaderTest.swift */; };
 		7896C7712AB43BF800461F5A /* RemoteLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7896C7702AB43BF800461F5A /* RemoteLoader.swift */; };
 		78982DF32AAE340C005BDAF6 /* UITableView+HeaderSizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78982DF22AAE340C005BDAF6 /* UITableView+HeaderSizing.swift */; };
+		789C52BA2AC01ABD00838AC7 /* LoadMoreCellController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789C52B92AC01ABD00838AC7 /* LoadMoreCellController.swift */; };
+		789C52BC2ACBCA3300838AC7 /* LoadMoreCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789C52BB2ACBCA3300838AC7 /* LoadMoreCell.swift */; };
 		789CFB7F2A80CCD40095E031 /* LoadFeedImageDataFromCacheUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789CFB7E2A80CCD40095E031 /* LoadFeedImageDataFromCacheUseCaseTests.swift */; };
 		789CFB812A81E1DD0095E031 /* LocalFeedImageDataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789CFB802A81E1DD0095E031 /* LocalFeedImageDataLoader.swift */; };
 		789CFB832A81E2070095E031 /* FeedImageDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789CFB822A81E2070095E031 /* FeedImageDataStore.swift */; };
@@ -241,6 +243,8 @@
 		7896C76E2AB436D800461F5A /* RemoteLoaderTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteLoaderTest.swift; sourceTree = "<group>"; };
 		7896C7702AB43BF800461F5A /* RemoteLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteLoader.swift; sourceTree = "<group>"; };
 		78982DF22AAE340C005BDAF6 /* UITableView+HeaderSizing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+HeaderSizing.swift"; sourceTree = "<group>"; };
+		789C52B92AC01ABD00838AC7 /* LoadMoreCellController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadMoreCellController.swift; sourceTree = "<group>"; };
+		789C52BB2ACBCA3300838AC7 /* LoadMoreCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadMoreCell.swift; sourceTree = "<group>"; };
 		789CFB7E2A80CCD40095E031 /* LoadFeedImageDataFromCacheUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadFeedImageDataFromCacheUseCaseTests.swift; sourceTree = "<group>"; };
 		789CFB802A81E1DD0095E031 /* LocalFeedImageDataLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalFeedImageDataLoader.swift; sourceTree = "<group>"; };
 		789CFB822A81E2070095E031 /* FeedImageDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageDataStore.swift; sourceTree = "<group>"; };
@@ -511,6 +515,7 @@
 			children = (
 				78928AB52A398A00006B10FE /* ListViewController.swift */,
 				789197842AB853F5008A44DA /* CellController.swift */,
+				789C52B92AC01ABD00838AC7 /* LoadMoreCellController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -616,6 +621,7 @@
 				78928AB92A3C1787006B10FE /* FeedImageCell.swift */,
 				789394EF2A6BC36E009F0024 /* Feed.storyboard */,
 				789394F12A6BC5B8009F0024 /* Feed.xcassets */,
+				789C52BB2ACBCA3300838AC7 /* LoadMoreCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1186,7 +1192,9 @@
 				78928ABC2A4001F2006B10FE /* UIView+Shimmering.swift in Sources */,
 				78928AB62A398A00006B10FE /* ListViewController.swift in Sources */,
 				78928ABA2A3C1787006B10FE /* FeedImageCell.swift in Sources */,
+				789C52BC2ACBCA3300838AC7 /* LoadMoreCell.swift in Sources */,
 				789197832AB79368008A44DA /* ImageCommentsCell.swift in Sources */,
+				789C52BA2AC01ABD00838AC7 /* LoadMoreCellController.swift in Sources */,
 				7891977B2AB78E44008A44DA /* ImageCommentsCellController.swift in Sources */,
 				789395182A78D5A2009F0024 /* UIRefreshControl+Helpers.swift in Sources */,
 				78982DF32AAE340C005BDAF6 /* UITableView+HeaderSizing.swift in Sources */,

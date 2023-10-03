@@ -91,12 +91,13 @@ private final class FeedViewAdapter:ResourceView{
             return CellController(id:model,view)
         }
         
+       
         let loadMore = LoadMoreCellController {
-            viewModel.loadMore?({_ in})
+            viewModel.loadMore?({ _ in })
         }
-        
-        let loadMoreSection:[CellController] = [CellController(id: UUID(), loadMore)]
-        controller?.display(feed,loadMoreSection)
+        let loadMoreSection = [CellController(id: UUID(), loadMore)]
+
+        controller?.display(feed, loadMoreSection)
     }
 }
 

@@ -41,7 +41,6 @@ public final class ListViewController:UITableViewController,UITableViewDataSourc
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.dataSource = dataSource
         configureErrorView()
         refresh()
     }
@@ -56,6 +55,9 @@ public final class ListViewController:UITableViewController,UITableViewDataSourc
         let container = UIView()
         container.backgroundColor = .clear
         container.addSubview(errorView)
+        
+        dataSource.defaultRowAnimation = .fade
+        tableView.dataSource = dataSource
         
         errorView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -87,12 +89,12 @@ public final class ListViewController:UITableViewController,UITableViewDataSourc
     }
     
     public func display(_ sections: [CellController]...) {
-//        loadingControllers = [:]
-//        tableModel = cellControllers
+        //        loadingControllers = [:]
+        //        tableModel = cellControllers
         var snapshot = NSDiffableDataSourceSnapshot<Int,CellController>()
-        sections.enumerated().forEach{ section,cellControllers in
+        sections.enumerated().forEach { section, cellControllers in
             snapshot.appendSections([section])
-            snapshot.appendItems(cellControllers,toSection: section)
+            snapshot.appendItems(cellControllers, toSection: section)
         }
         
         dataSource.apply(snapshot)
@@ -122,6 +124,11 @@ public final class ListViewController:UITableViewController,UITableViewDataSourc
     public override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let dl = cellController(at: indexPath)?.delegate
         dl?.tableView?(tableView, didSelectRowAt: indexPath)
+    }
+    
+    public override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let dl = cellController(at: indexPath)?.delegate
+        dl?.tableView?(tableView, willDisplay: cell, forRowAt: indexPath)
     }
     
     private func cellController(at indexPath:IndexPath) -> CellController?{

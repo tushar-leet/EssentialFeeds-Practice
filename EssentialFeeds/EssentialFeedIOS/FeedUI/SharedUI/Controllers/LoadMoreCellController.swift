@@ -20,7 +20,7 @@ public class LoadMoreCellController:NSObject,UITableViewDataSource,UITableViewDe
         return 1
     }
     
-    public func tableView(_ tableView: UITableView, willDisplay: UITableViewCell, forRowAt indexPath: IndexPath) {
+    public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         callback()
     }
     

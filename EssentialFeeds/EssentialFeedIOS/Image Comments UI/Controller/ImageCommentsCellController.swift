@@ -8,7 +8,7 @@
 import UIKit
 import EssentialFeeds
 
-public class ImageCommentCellController:NSObject,UITableViewDataSource{
+public class ImageCommentCellController:NSObject,UITableViewDataSource,UITableViewDelegate{
   
     private let model: ImageCommentViewModel
     

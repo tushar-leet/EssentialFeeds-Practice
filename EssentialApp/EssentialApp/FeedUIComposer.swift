@@ -10,6 +10,19 @@ import UIKit
 import Combine
 import EssentialFeedIOS
 
+public extension Paginated {
+     var loadMorePublisher: (() -> AnyPublisher<Self, Error>)? {
+         guard let loadMore = loadMore else { return nil }
+
+         return {
+             Deferred {
+                 Future(loadMore)
+             }.eraseToAnyPublisher()
+         }
+     }
+ }
+
+
 public final class FeedUIComposer {
      private init() {}
 
@@ -67,7 +80,7 @@ private final class FeedViewAdapter:ResourceView{
     private weak var controller:ListViewController?
     private let loader: (URL) -> FeedImageDataLoader.Publisher
     private let selection: (FeedImage) -> Void
-    
+    private typealias LoadMorePresentationAdapter = LoadResourcePresentationAdapter<Paginated<FeedImage>,FeedViewAdapter>
     init(controller: ListViewController, loader: @escaping (URL) -> FeedImageDataLoader.Publisher,selection: @escaping (FeedImage) -> Void) {
         self.controller = controller
         self.loader = loader
@@ -91,12 +104,20 @@ private final class FeedViewAdapter:ResourceView{
             return CellController(id:model,view)
         }
         
-       
-        let loadMore = LoadMoreCellController {
-            viewModel.loadMore?({ _ in })
+        guard let loadMorePublisher = viewModel.loadMorePublisher else {
+            controller?.display(feed)
+            return
         }
-        let loadMoreSection = [CellController(id: UUID(), loadMore)]
 
+        let loadMoreAdapter = LoadMorePresentationAdapter(loader: loadMorePublisher)
+        let loadMore = LoadMoreCellController(callback: loadMoreAdapter.loadResource)
+        
+        loadMoreAdapter.presenter = LoadResourcePresenter(errorView: WeakRefVirtualProxy(object: loadMore),
+                                                          loadingView: WeakRefVirtualProxy(object: loadMore),
+                                                          resourceView: self,
+                                                          mapper: {$0})
+        let loadMoreSection = [CellController(id:UUID() ,loadMore)]
+        
         controller?.display(feed, loadMoreSection)
     }
 }

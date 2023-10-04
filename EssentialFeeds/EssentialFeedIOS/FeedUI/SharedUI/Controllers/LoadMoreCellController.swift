@@ -26,7 +26,7 @@ public class LoadMoreCellController:NSObject,UITableViewDataSource,UITableViewDe
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        LoadMoreCell()
+        cell
     }
 }
 

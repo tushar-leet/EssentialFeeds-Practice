@@ -8,7 +8,7 @@
 import UIKit
 
 public class LoadMoreCell:UITableViewCell{
-    private lazy var indicator:UIActivityIndicatorView = {
+    private lazy var spinner:UIActivityIndicatorView = {
         let spinner = UIActivityIndicatorView(style: .medium)
         contentView.addSubview(spinner)
         spinner.translatesAutoresizingMaskIntoConstraints = false
@@ -42,13 +42,13 @@ public class LoadMoreCell:UITableViewCell{
     
     public var isLoading:Bool{
         get{
-            indicator.isAnimating
+            spinner.isAnimating
         }
         set{
             if newValue{
-                indicator.startAnimating()
+                spinner.startAnimating()
             }else{
-                indicator.stopAnimating()
+                spinner.stopAnimating()
             }
         }
     }

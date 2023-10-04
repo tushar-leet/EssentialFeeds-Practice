@@ -130,16 +130,20 @@ class FeedUIIntegrationTests: XCTestCase {
         sut.loadViewIfNeeded()
         XCTAssertEqual(sut.numberOfRenderedFeedImageViews(), 0)
         
-        loader.completeFeedLoading(with: [image0],0)
-        XCTAssertEqual(sut.numberOfRenderedFeedImageViews(), 1)
+        loader.completeFeedLoading(with: [image0,image1],0)
+        assertThat(sut, isRendering: [image0,image1])
+        
+        sut.simulateLoadMoreFeedAction()
+        loader.completeFeedLoading(with: [image0,image1,image2,image3],0)
+        assertThat(sut, isRendering: [image0,image1,image2,image3])
         
         let view = sut.feedImageView(at: 0) as? FeedImageCell
         XCTAssertNotNil(view)
         assertThat(sut, hasViewConfiguredFor: image0, at: 0)
         
         sut.simulateUserInitatedReload()
-        loader.completeFeedLoading(with: [image0,image1,image2,image3],1)
-        assertThat(sut, isRendering: [image0,image1,image2,image3], withLoader: loader)
+        loader.completeFeedLoading(with: [image0,image1],1)
+        assertThat(sut, isRendering: [image0,image1])
     }
     
     func test_loadFeedCompletion_doesNotAltersCurrentRendringStateOnError(){
@@ -153,6 +157,10 @@ class FeedUIIntegrationTests: XCTestCase {
         sut.simulateUserInitatedReload()
         loader.completeFeedLoadingWithError(at: 1)
         assertThat(sut, isRendering: [image0], withLoader: loader)
+        
+        sut.simulateUserInitatedReload()
+        loader.completeFeedLoadingWithError(at: 0)
+        assertThat(sut, isRendering: [image0])
     }
     
     func test_loadFeedCompletion_rendersSuccessfullyLoadedEmptyFeedAfterNonEmptyFeed() {
@@ -161,8 +169,12 @@ class FeedUIIntegrationTests: XCTestCase {
         let (sut, loader) = makeSUT()
         
         sut.loadViewIfNeeded()
-        loader.completeFeedLoading(with: [image0, image1],0)
-        assertThat(sut, isRendering: [image0, image1])
+        loader.completeFeedLoading(with: [image0],0)
+        assertThat(sut, isRendering: [image0])
+        
+        sut.simulateLoadMoreFeedAction()
+        loader.completeFeedLoading(with: [image0,image1],0)
+        assertThat(sut, isRendering: [image0,image1])
         
         sut.simulateUserInitatedReload()
         loader.completeFeedLoading(with: [], 1)
@@ -354,6 +366,19 @@ class FeedUIIntegrationTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
+    func test_loadMoreCompletion_dispatchesFromBackgroundToMainThread() {
+        let (sut, loader) = makeSUT()
+        sut.loadViewIfNeeded()
+        loader.completeFeedLoading(0)
+        sut.simulateLoadMoreFeedAction()
+        let exp = expectation(description: "Wait for background queue")
+        DispatchQueue.global().async {
+            loader.completeLoadMore()
+            exp.fulfill()
+        }
+        wait(for: [exp], timeout: 1.0)
+    }
+    
     func test_loadImageDataCompletion_dispatchesFromBackgroundToMainThread() {
         let (sut, loader) = makeSUT()
         
@@ -380,6 +405,21 @@ class FeedUIIntegrationTests: XCTestCase {
         XCTAssertEqual(sut.errorMessage, loadError)
         sut.simulateUserInitatedReload()
         XCTAssertEqual(sut.errorMessage, nil)
+    }
+    
+    func test_loadMoreCompletion_rendersErrorMessageOnError() {
+        let (sut, loader) = makeSUT()
+        sut.loadViewIfNeeded()
+        loader.completeFeedLoading()
+        
+        sut.simulateLoadMoreFeedAction()
+        XCTAssertEqual(sut.loadMoreFeedErrorMessage, nil)
+        
+        loader.completeLoadMoreWithError()
+        XCTAssertEqual(sut.loadMoreFeedErrorMessage, loadError)
+        
+        sut.simulateLoadMoreFeedAction()
+        XCTAssertEqual(sut.loadMoreFeedErrorMessage, nil)
     }
     
     func test_tapOnErrorView_hidesErrorMessage() {
@@ -523,6 +563,10 @@ extension ListViewController{
     
     private func loadMoreFeedCell() -> LoadMoreCell? {
         cell(row: 0, section: feedLoadMoreSection) as? LoadMoreCell
+    }
+    
+    var loadMoreFeedErrorMessage: String? {
+        return loadMoreFeedCell()?.message
     }
     
     private var feedImageSection:Int{

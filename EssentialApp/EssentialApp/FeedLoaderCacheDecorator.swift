@@ -26,9 +26,3 @@ import Combine
          }
      }
  }
-
-extension FeedCache {
-     func saveIgnoringResult(_ feed: [FeedImage]) {
-         save(feed) { _ in }
-     }
- }
